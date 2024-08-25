@@ -7,7 +7,7 @@ const ActiveLink = (props: any) => {
       style={({ isActive }) => {
         return {
           borderBottom: isActive
-            ? '2px solid primary'
+            ? '2px solid #003B95'
             : '2px solid transparent',
         };
       }}

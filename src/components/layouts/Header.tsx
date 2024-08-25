@@ -1,12 +1,33 @@
+import { Link } from 'react-router-dom';
+import { useState } from 'react';
+
 import BrandLogo from '../ui/BrandLogo';
-import { FaCartShopping } from 'react-icons/fa6';
 import { Button } from '../ui/button';
 import ActiveLink from '../ui/ActiveLink';
-import { Link } from 'react-router-dom';
-
-import { useState } from 'react';
+import defaultUser from '@/assets/images/defaultUser.png';
 import MenuIcon from '@/assets/icons/MenuIcon';
 import CloseIcon from '@/assets/icons/CloseIcon';
+
+const menuItems = (
+  <>
+    <li>
+      <ActiveLink to="/">Home</ActiveLink>
+    </li>
+    <li>
+      <ActiveLink to="/meeting-rooms">Meeting rooms</ActiveLink>
+    </li>
+    <li>
+      <ActiveLink to="/about">About Us</ActiveLink>
+    </li>
+    <li>
+      <ActiveLink to="/contact">Contact Us</ActiveLink>
+    </li>
+    <li>
+      <ActiveLink to="/dashboard">Dashboard</ActiveLink>
+    </li>
+  </>
+);
+
 const Header = () => {
   const [open, setOpen] = useState(true);
 
@@ -19,49 +40,21 @@ const Header = () => {
           <BrandLogo />
         </Link>
         <nav>
-          <ul className="flex gap-4 font-semibold text-[#212529]">
-            <li>
-              <ActiveLink to="/">Home</ActiveLink>
-            </li>
-            <li>
-              <ActiveLink to="/products">Products</ActiveLink>
-            </li>
-            <li>
-              <ActiveLink to="/about">About Us</ActiveLink>
-            </li>
-            <li>
-              <ActiveLink to="/contact">Contact Us</ActiveLink>
-            </li>
-            <li>
-              <ActiveLink to="/dashboard">Dashboard</ActiveLink>
-            </li>
+          <ul className="flex gap-4 font-semibold text-gray-700">
+            {menuItems}
           </ul>
         </nav>
 
-        {/* CART,LOGIN,PROFILE GROUP */}
+        {/* LOGIN,PROFILE GROUP */}
         <div className="flex items-center gap-4">
-          <div>
-            <Link to="/cart">
-              <div className="relative mr-2">
-                <FaCartShopping className="text-base text-[#212529]" />
-                <span className="absolute flex items-center justify-center w-5 h-5 font-semibold rounded-full bg-primary text-slate-50 -top-3 left-3">
-                  {0}
-                </span>
-              </div>
-            </Link>
-          </div>
           <div>
             <Button onClick={() => alert('Not implement yet')}>
               Login
             </Button>
           </div>
-          <div>
-            <img
-              onClick={() => alert('Not implemented yet!')}
-              className="object-cover w-10 h-10 rounded-full"
-              src="https://cdn.pixabay.com/photo/2020/09/18/05/58/lights-5580916_640.jpg"
-              alt=""
-            />
+
+          <div className="relative">
+            <ProfilePopover />
           </div>
         </div>
       </div>
@@ -71,30 +64,19 @@ const Header = () => {
         <div className="flex px-2 bg-[#e9effd] h-[80px] items-center justify-between fixed top-0 w-full z-20">
           <div onClick={() => setOpen(!open)} className="">
             {open && (
-              <button className="border w-10 h-10 flex justify-center items-center text-3xl text-primary border-primary">
+              <button className="flex items-center justify-center w-10 h-10 text-3xl border text-primary border-primary">
                 <MenuIcon />
               </button>
             )}
 
             {!open && (
-              <button className="border w-10 h-10 flex justify-center items-center text-3xl text-primary border-primary">
+              <button className="flex items-center justify-center w-10 h-10 text-3xl border text-primary border-primary">
                 <CloseIcon />
               </button>
             )}
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="mr-1">
-              <Link to="/cart">
-                <div className="relative mr-2">
-                  <FaCartShopping className="text-base text-[#212529]" />
-                  <span className="absolute flex items-center justify-center w-5 h-5 font-semibold rounded-full bg-primary text-[#f8f9fa] -top-3 left-3">
-                    {0}
-                  </span>
-                </div>
-              </Link>
-            </div>
-
             <div>
               <Button
                 className="text-base"
@@ -104,13 +86,8 @@ const Header = () => {
               </Button>
             </div>
 
-            <div>
-              <img
-                onClick={() => alert('Not implemented yet!')}
-                className="object-cover w-10 h-10 rounded-full"
-                src="https://cdn.pixabay.com/photo/2020/09/18/05/58/lights-5580916_640.jpg"
-                alt=""
-              />
+            <div className="">
+              <ProfilePopover />
             </div>
           </div>
         </div>
@@ -121,21 +98,7 @@ const Header = () => {
               !open && 'translate-x-0'
             }`}
           >
-            <li>
-              <ActiveLink to="/">Home</ActiveLink>
-            </li>
-            <li>
-              <ActiveLink to="/products">Products</ActiveLink>
-            </li>
-            <li>
-              <ActiveLink to="/about">About Us</ActiveLink>
-            </li>
-            <li>
-              <ActiveLink to="/contact">Contact Us</ActiveLink>
-            </li>
-            <li>
-              <ActiveLink to="/dashboard">Dashboard</ActiveLink>
-            </li>
+            {menuItems}
           </ul>
         </nav>
       </div>
@@ -144,3 +107,58 @@ const Header = () => {
 };
 
 export default Header;
+
+// PROFILE POPOVER COMPONENT
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+
+const ProfilePopover = () => {
+  const role = 'admin';
+  return (
+    <Popover>
+      <PopoverTrigger>
+        <img
+          className="object-cover w-10 h-10 rounded-full"
+          src={defaultUser}
+          alt=""
+        />
+      </PopoverTrigger>
+      <PopoverContent className="mt-5">
+        <h4 className="text-lg font-semibold">My account</h4>
+        <hr className="my-2 border-gray-300" />
+        {role === 'admin' ? (
+          <>
+            <div className="flex flex-col gap-2">
+              <Link
+                to="/dashboard"
+                className="border-b-2 border-b-transparent w-fit hover:border-b-2 hover:border-b-primary"
+              >
+                Dashboard
+              </Link>
+              <button className="text-left border-b-2 border-b-transparent w-fit hover:border-b-2 hover:border-b-primary">
+                Logout
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex flex-col gap-2">
+              <Link
+                to="/my-booking"
+                className="border-b-2 border-b-transparent w-fit hover:border-b-2 hover:border-b-primary"
+              >
+                My booking
+              </Link>
+              <button className="text-left border-b-2 border-b-transparent w-fit hover:border-b-2 hover:border-b-primary">
+                Logout
+              </button>
+            </div>
+          </>
+        )}
+      </PopoverContent>
+    </Popover>
+  );
+};
