@@ -22,7 +22,8 @@ const Footer = () => {
             <BrandLogo />
           </Link>
           <p className="mt-4 text-wrap text-sm text-gray-700">
-            A great keyboard is a symphony for your fingers
+            Our meeting room booking website simplifies and streamlines
+            efficient scheduling effortlessly.
           </p>
         </div>
 

@@ -21,8 +21,10 @@ const Testimonials = () => {
   };
 
   return (
-    <section className="py-20 pb-10 md:pb-20">
-      <SectionHeading heading="Customer Reviews" />
+    <section className="pt-20">
+      <div className="flex justify-center">
+        <SectionHeading heading="Customer Reviews" />
+      </div>
       <div className="md:px-10" style={style}>
         <Swiper
           slidesPerView={1}

@@ -3,8 +3,10 @@ import SectionHeading from '../ui/SectionHeading';
 
 const ServiceAdvertisement = () => {
   return (
-    <section className="pb-10 border-b md:pb-20">
-      <SectionHeading heading="Services Benefits" />
+    <section className="py-10 border-b md:py-20">
+      <div className="flex justify-center">
+        <SectionHeading heading="Services Benefits" />
+      </div>
       <div className="grid grid-cols-1 gap-10 px-1 md:px-10 md:grid-cols-4">
         {serviceAdvertisementData?.map((item) => (
           <ServiceCard key={item.id} item={item} />
