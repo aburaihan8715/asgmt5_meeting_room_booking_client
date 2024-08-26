@@ -2,16 +2,17 @@ import AppLayout from '@/components/layouts/AppLayout';
 import DashboardLayout from '@/components/layouts/DashboardLayout';
 import AboutUs from '@/pages/AboutUs';
 import ContactUs from '@/pages/ContactUs';
-import Dashboard from '@/pages/dashboard/Dashboard';
-import MyBooking from '@/pages/dashboard/MyBooking';
+import AdminDashboard from '@/pages/dashboard/admin/AdminDashboard';
+import MyBooking from '@/pages/dashboard/user/MyBooking';
 import Home from '@/pages/Home';
-import Login from '@/pages/Login';
+import Login from '@/pages/auth/Login';
 import MeetingRooms from '@/pages/MeetingRooms';
-import Register from '@/pages/Register';
+import Register from '@/pages/auth/Register';
 import { createBrowserRouter } from 'react-router-dom';
+import UserDashboard from '@/pages/dashboard/user/UserDashboard';
 
 export const router = createBrowserRouter([
-  // APP LAYOUT ROUTES
+  // A) APP LAYOUT ROUTES
   {
     element: <AppLayout />,
     children: [
@@ -34,13 +35,20 @@ export const router = createBrowserRouter([
     ],
   },
 
-  // DASHBOARD LAYOUT ROUTES
+  // B) DASHBOARD LAYOUT ROUTES
   {
+    path: 'dashboard',
     element: <DashboardLayout />,
     children: [
+      // B1) admin
       {
-        path: 'dashboard',
-        element: <Dashboard />,
+        path: 'admin',
+        element: <AdminDashboard />,
+      },
+      // B2) user
+      {
+        path: 'user',
+        element: <UserDashboard />,
       },
       {
         path: 'my-booking',
@@ -49,7 +57,7 @@ export const router = createBrowserRouter([
     ],
   },
 
-  // OTHERS ROUTES
+  // C) OTHERS ROUTES
   {
     path: '/login',
     element: <Login />,

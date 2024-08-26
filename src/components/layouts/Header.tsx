@@ -8,6 +8,8 @@ import defaultUser from '@/assets/images/defaultUser.png';
 import MenuIcon from '@/assets/icons/MenuIcon';
 import CloseIcon from '@/assets/icons/CloseIcon';
 
+const role = 'user';
+
 const menuItems = (
   <>
     <li>
@@ -23,7 +25,7 @@ const menuItems = (
       <ActiveLink to="/contact">Contact Us</ActiveLink>
     </li>
     <li>
-      <ActiveLink to="/dashboard">Dashboard</ActiveLink>
+      <ActiveLink to={`/dashboard/${role}`}>Dashboard</ActiveLink>
     </li>
   </>
 );
@@ -34,7 +36,7 @@ const Header = () => {
   return (
     <header>
       {/* DESKTOP NAV */}
-      <div className="md:flex hidden bg-slate-50 justify-between h-[80px] items-center px-10 fixed top-0 w-full z-20">
+      <div className="md:flex hidden bg-orange-50 justify-between h-[80px] items-center px-10 fixed top-0 w-full z-20">
         {/* LOGO */}
         <Link to="/">
           <BrandLogo />
@@ -47,14 +49,14 @@ const Header = () => {
 
         {/* LOGIN,PROFILE GROUP */}
         <div className="flex items-center gap-4">
+          <div className="flex items-center">
+            <ProfilePopover />
+          </div>
+
           <div>
             <Button onClick={() => alert('Not implement yet')}>
               Login
             </Button>
-          </div>
-
-          <div className="relative">
-            <ProfilePopover />
           </div>
         </div>
       </div>
@@ -77,17 +79,17 @@ const Header = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <div>
+            <div className="flex items-center">
+              <ProfilePopover />
+            </div>
+
+            <div className="">
               <Button
                 className="text-base"
                 onClick={() => alert('Not implement yet')}
               >
                 Login
               </Button>
-            </div>
-
-            <div className="">
-              <ProfilePopover />
             </div>
           </div>
         </div>
