@@ -25,7 +25,7 @@ const Testimonials = () => {
       <div className="flex justify-center">
         <SectionHeading heading="Customer Reviews" />
       </div>
-      <div className="md:px-10" style={style}>
+      <div className="md:px-8" style={style}>
         <Swiper
           slidesPerView={1}
           spaceBetween={30}
@@ -75,28 +75,3 @@ const Testimonials = () => {
 };
 
 export default Testimonials;
-
-/*
-import { Swiper, SwiperSlide } from 'swiper/react';
-
-// Import Swiper styles
-import 'swiper/css';
-
-const Testimonials = () => {
-  return (
-    <Swiper
-      spaceBetween={50}
-      slidesPerView={3}
-      onSlideChange={() => console.log('slide change')}
-      onSwiper={(swiper) => console.log(swiper)}
-    >
-      <SwiperSlide>Slide 1</SwiperSlide>
-      <SwiperSlide>Slide 2</SwiperSlide>
-      <SwiperSlide>Slide 3</SwiperSlide>
-      <SwiperSlide>Slide 4</SwiperSlide>
-    </Swiper>
-  );
-};
-
-export default Testimonials;
-*/

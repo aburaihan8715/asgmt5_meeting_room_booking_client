@@ -1,5 +1,5 @@
 import Banner from '@/components/home/Banner';
-import FeaturedRoom from '@/components/home/FeaturedRoom';
+import FeaturedRooms from '@/components/home/FeaturedRooms';
 import HowItWorks from '@/components/home/HowItWorks';
 import ServiceAdvertisement from '@/components/home/ServiceAdvertisement';
 import Testimonials from '@/components/home/Testimonials';
@@ -10,7 +10,7 @@ const Home = () => {
     <>
       <Banner />
       <ServiceAdvertisement />
-      <FeaturedRoom />
+      <FeaturedRooms />
       <WhyChooseUs />
       <HowItWorks />
       <Testimonials />
