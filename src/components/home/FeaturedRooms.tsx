@@ -76,12 +76,20 @@ const RoomCard = ({
   pricePerSlot,
 }: RoomCardProps) => {
   return (
-    <div className="overflow-hidden bg-white rounded-lg shadow-md">
+    <div className="relative overflow-hidden bg-white rounded-lg shadow-md group">
       <img
         src={image}
         alt={roomName}
         className="object-cover w-full h-40"
       />
+      <div className="absolute inset-0 flex items-center justify-center transition-opacity duration-300 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100">
+        <a
+          href="/meeting-rooms"
+          className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600"
+        >
+          See Details
+        </a>
+      </div>
       <div className="p-4">
         <h3 className="mb-2 text-xl font-semibold text-gray-800">
           {roomName}
@@ -92,12 +100,6 @@ const RoomCard = ({
         <p className="mb-4 text-sm text-gray-600">
           Price per slot: ${pricePerSlot}
         </p>
-        <a
-          href="/meeting-rooms"
-          className="inline-block px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600"
-        >
-          See Details
-        </a>
       </div>
     </div>
   );
