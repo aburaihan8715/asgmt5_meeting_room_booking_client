@@ -10,11 +10,13 @@ import MeetingRooms from '@/pages/MeetingRooms';
 import Register from '@/pages/auth/Register';
 import { createBrowserRouter } from 'react-router-dom';
 import UserDashboard from '@/pages/dashboard/user/UserDashboard';
+import ErrorPage from '@/pages/ErrorPage';
 
 export const router = createBrowserRouter([
   // A) APP LAYOUT ROUTES
   {
     element: <AppLayout />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: '/',
@@ -39,6 +41,7 @@ export const router = createBrowserRouter([
   {
     path: 'dashboard',
     element: <DashboardLayout />,
+    errorElement: <ErrorPage />,
     children: [
       // B1) admin
       {
