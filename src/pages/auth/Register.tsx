@@ -1,8 +1,10 @@
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import SectionHeading from '@/components/ui/SectionHeading';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion'; // Import Framer Motion
+import SectionHeading from '@/components/ui/SectionHeading';
 
 const schema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -14,7 +16,7 @@ const schema = z.object({
 
 type TRegisterFormData = z.infer<typeof schema>;
 
-const Register = () => {
+const Register: React.FC = () => {
   const {
     register,
     handleSubmit,
@@ -37,13 +39,22 @@ const Register = () => {
 
   return (
     <div className="flex justify-center min-h-screen py-12 bg-gray-50 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md p-8 bg-white rounded shadow">
-        <div className="flex justify-center">
+      <motion.div
+        className="w-full max-w-md p-8 bg-white rounded shadow"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="flex justify-center mb-6">
           <SectionHeading heading="Register" />
         </div>
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4">
-            <div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
               <label
                 htmlFor="name"
                 className="block text-sm font-medium text-gray-700"
@@ -62,9 +73,13 @@ const Register = () => {
                   {errors.name.message}
                 </p>
               )}
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+            >
               <label
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
@@ -83,9 +98,13 @@ const Register = () => {
                   {errors.email.message}
                 </p>
               )}
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
+            >
               <label
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700"
@@ -105,9 +124,13 @@ const Register = () => {
                   {errors.password.message}
                 </p>
               )}
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, delay: 0.3 }}
+            >
               <label
                 htmlFor="phone"
                 className="block text-sm font-medium text-gray-700"
@@ -126,9 +149,13 @@ const Register = () => {
                   {errors.phone.message}
                 </p>
               )}
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, delay: 0.4 }}
+            >
               <label
                 htmlFor="address"
                 className="block text-sm font-medium text-gray-700"
@@ -147,7 +174,7 @@ const Register = () => {
                   {errors.address.message}
                 </p>
               )}
-            </div>
+            </motion.div>
           </div>
 
           <div>
@@ -160,7 +187,12 @@ const Register = () => {
           </div>
         </form>
 
-        <div className="mt-4 text-center">
+        <motion.div
+          className="mt-4 text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3, delay: 0.5 }}
+        >
           <p className="text-sm text-gray-600">
             Already have an account?{' '}
             <Link
@@ -170,8 +202,8 @@ const Register = () => {
               Login
             </Link>
           </p>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };
