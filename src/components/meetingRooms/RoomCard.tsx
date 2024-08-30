@@ -1,4 +1,5 @@
 // RoomCard.tsx
+
 import { Link } from 'react-router-dom';
 
 interface RoomCardProps {
@@ -12,23 +13,33 @@ interface RoomCardProps {
 }
 
 const RoomCard = ({ room }: RoomCardProps) => (
-  <div className="p-4 bg-white rounded shadow-lg">
+  <div className="relative overflow-hidden bg-white rounded-lg shadow-md group">
     <img
       src={room.image}
       alt={room.name}
       className="w-full h-40 object-cover rounded"
     />
-    <h3 className="text-lg font-semibold mt-2">{room.name}</h3>
-    <p className="text-sm text-gray-600">Capacity: {room.capacity}</p>
-    <p className="text-sm text-gray-600">
-      Price per slot: ${room.pricePerSlot}
-    </p>
-    <Link
-      to={`/rooms/${room.id}`}
-      className="mt-4 inline-block px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700"
-    >
-      See Details
-    </Link>
+
+    <div className="absolute inset-0 flex items-center justify-center transition-opacity duration-300 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100">
+      <Link
+        to={`/room-details/123`}
+        className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600"
+      >
+        See Details
+      </Link>
+    </div>
+
+    <div className="p-4">
+      <h3 className="mb-2 text-xl font-semibold text-gray-800">
+        {room.name}
+      </h3>
+      <p className="mb-1 text-sm text-gray-600">
+        Capacity: {room.capacity} people
+      </p>
+      <p className="mb-4 text-sm text-gray-600">
+        Price per slot: ${room.pricePerSlot}
+      </p>
+    </div>
   </div>
 );
 

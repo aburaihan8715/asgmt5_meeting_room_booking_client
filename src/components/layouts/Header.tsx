@@ -8,117 +8,16 @@ import defaultUser from '@/assets/images/defaultUser.png';
 import MenuIcon from '@/assets/icons/MenuIcon';
 import CloseIcon from '@/assets/icons/CloseIcon';
 
-const role = 'user';
-
-const menuItems = (
-  <>
-    <li>
-      <ActiveLink to="/">Home</ActiveLink>
-    </li>
-    <li>
-      <ActiveLink to="/meeting-rooms">Meeting rooms</ActiveLink>
-    </li>
-    <li>
-      <ActiveLink to="/about">About Us</ActiveLink>
-    </li>
-    <li>
-      <ActiveLink to="/contact">Contact Us</ActiveLink>
-    </li>
-    <li>
-      <ActiveLink to={`/dashboard/${role}`}>Dashboard</ActiveLink>
-    </li>
-  </>
-);
-
-const Header = () => {
-  const [open, setOpen] = useState(true);
-
-  return (
-    <header>
-      {/* DESKTOP NAV */}
-      <div className="md:flex hidden bg-orange-50 justify-between h-[80px] items-center px-10 fixed top-0 w-full z-20">
-        {/* LOGO */}
-        <Link to="/">
-          <BrandLogo />
-        </Link>
-        <nav>
-          <ul className="flex gap-4 font-semibold text-gray-700">
-            {menuItems}
-          </ul>
-        </nav>
-
-        {/* LOGIN,PROFILE GROUP */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center">
-            <ProfilePopover />
-          </div>
-
-          <div>
-            <Link to={`/login`}>
-              <Button>Login</Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* MOBILE NAV */}
-      <div className="md:hidden">
-        <div className="flex px-2 bg-[#e9effd] h-[80px] items-center justify-between fixed top-0 w-full z-20">
-          <div onClick={() => setOpen(!open)} className="">
-            {open && (
-              <button className="flex items-center justify-center w-10 h-10 text-3xl border text-primary border-primary">
-                <MenuIcon />
-              </button>
-            )}
-
-            {!open && (
-              <button className="flex items-center justify-center w-10 h-10 text-3xl border text-primary border-primary">
-                <CloseIcon />
-              </button>
-            )}
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="flex items-center">
-              <ProfilePopover />
-            </div>
-
-            <div className="">
-              <Button
-                className="text-base"
-                onClick={() => alert('Not implement yet')}
-              >
-                Login
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        <nav className="">
-          <ul
-            className={`flex bg-yellow-50/90 fixed top-[80px] z-20 h-full flex-col gap-2 font-semibold text-[#212529] pt-5 pl-8 w-[180px] -translate-x-[100%] transition-transform duration-500 ${
-              !open && 'translate-x-0'
-            }`}
-          >
-            {menuItems}
-          </ul>
-        </nav>
-      </div>
-    </header>
-  );
-};
-
-export default Header;
-
-// PROFILE POPOVER COMPONENT
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { logout } from '@/redux/features/auth/authSlice';
 
-const ProfilePopover = () => {
-  const role = 'admin';
+// PROFILE POPOVER COMPONENT
+const ProfilePopover = ({ role }: { role: string }) => {
   return (
     <Popover>
       <PopoverTrigger>
@@ -164,3 +63,130 @@ const ProfilePopover = () => {
     </Popover>
   );
 };
+
+// HEADER COMPONENT
+const Header = () => {
+  const [open, setOpen] = useState(true);
+  const user = useAppSelector((state) => state.auth.user);
+  const role = user?.role;
+  const dispatch = useAppDispatch();
+
+  const menuItems = (
+    <>
+      <li>
+        <ActiveLink to="/">Home</ActiveLink>
+      </li>
+      <li>
+        <ActiveLink to="/meeting-rooms">Meeting rooms</ActiveLink>
+      </li>
+      <li>
+        <ActiveLink to="/about">About Us</ActiveLink>
+      </li>
+      <li>
+        <ActiveLink to="/contact">Contact Us</ActiveLink>
+      </li>
+      {user && (
+        <li>
+          <ActiveLink to={`/dashboard/${role}`}>Dashboard</ActiveLink>
+        </li>
+      )}
+    </>
+  );
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
+  return (
+    <header>
+      {/* DESKTOP NAV */}
+      <div className="md:flex hidden bg-orange-50 justify-between h-[80px] items-center px-10 fixed top-0 w-full z-20">
+        {/* LOGO */}
+        <Link to="/">
+          <BrandLogo />
+        </Link>
+        <nav>
+          <ul className="flex gap-4 font-semibold text-gray-700">
+            {menuItems}
+          </ul>
+        </nav>
+
+        {/* LOGIN,PROFILE GROUP */}
+        <div className="flex items-center gap-4">
+          {role && (
+            <div className="flex items-center">
+              <ProfilePopover role={role} />
+            </div>
+          )}
+
+          {!user && (
+            <div>
+              <Link to={`/login`}>
+                <Button>Login</Button>
+              </Link>
+            </div>
+          )}
+
+          {user && (
+            <div>
+              <Button onClick={handleLogout}>Logout</Button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* MOBILE NAV */}
+      <div className="md:hidden">
+        <div className="flex px-2 bg-[#e9effd] h-[80px] items-center justify-between fixed top-0 w-full z-20">
+          <div onClick={() => setOpen(!open)} className="">
+            {open && (
+              <button className="flex items-center justify-center w-10 h-10 text-3xl border text-primary border-primary">
+                <MenuIcon />
+              </button>
+            )}
+
+            {!open && (
+              <button className="flex items-center justify-center w-10 h-10 text-3xl border text-primary border-primary">
+                <CloseIcon />
+              </button>
+            )}
+          </div>
+
+          <div className="flex items-center gap-4">
+            {role && (
+              <div className="flex items-center">
+                <ProfilePopover role={role} />
+              </div>
+            )}
+
+            {!user && (
+              <div>
+                <Link to={`/login`}>
+                  <Button>Login</Button>
+                </Link>
+              </div>
+            )}
+
+            {user && (
+              <div>
+                <Button onClick={handleLogout}>Logout</Button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <nav className="">
+          <ul
+            className={`flex bg-yellow-50/90 fixed top-[80px] z-20 h-full flex-col gap-2 font-semibold text-[#212529] pt-5 pl-8 w-[180px] -translate-x-[100%] transition-transform duration-500 ${
+              !open && 'translate-x-0'
+            }`}
+          >
+            {menuItems}
+          </ul>
+        </nav>
+      </div>
+    </header>
+  );
+};
+
+export default Header;

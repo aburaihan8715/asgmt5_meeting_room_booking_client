@@ -1,6 +1,7 @@
 import FilterBar from '@/components/meetingRooms/FilterBar1';
 import Pagination from '@/components/meetingRooms/Pagination';
 import RoomCard from '@/components/meetingRooms/RoomCard';
+import SectionHeading from '@/components/ui/SectionHeading';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 
@@ -135,35 +136,42 @@ const MeetingRoomsPage: React.FC = () => {
   const handlePageChange = (page: number) => setCurrentPage(page);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <FilterBar
-        onSearch={handleSearch}
-        onFilterChange={handleFilterChange}
-        onSortChange={handleSortChange}
-      />
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
-        {paginatedRooms.map((room) => (
-          <motion.div
-            key={room.id}
-            className="bg-white rounded shadow-lg overflow-hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.9 }}
-          >
-            <RoomCard room={room} />
-          </motion.div>
-        ))}
+    <section className="md:py-20 py-10 px-10">
+      <div className="flex justify-center">
+        <SectionHeading heading="Meeting Rooms" />
       </div>
-
-      {paginatedRooms.length > 0 && (
-        <Pagination
-          currentPage={currentPage}
-          totalItems={filteredAndSortedRooms.length}
-          itemsPerPage={itemsPerPage}
-          onPageChange={handlePageChange}
+      <div className="min-h-screen">
+        <FilterBar
+          onSearch={handleSearch}
+          onFilterChange={handleFilterChange}
+          onSortChange={handleSortChange}
         />
-      )}
-    </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+          {paginatedRooms.map((room) => (
+            <motion.div
+              key={room.id}
+              className="bg-white rounded shadow-lg overflow-hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1 }}
+            >
+              <RoomCard room={room} />
+            </motion.div>
+          ))}
+        </div>
+
+        {paginatedRooms.length > 0 && (
+          <div className="flex justify-start">
+            <Pagination
+              currentPage={currentPage}
+              totalItems={filteredAndSortedRooms.length}
+              itemsPerPage={itemsPerPage}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        )}
+      </div>
+    </section>
   );
 };
 

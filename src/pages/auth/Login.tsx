@@ -2,9 +2,14 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion'; // Import Framer Motion
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { toast } from 'sonner';
+
 import SectionHeading from '@/components/ui/SectionHeading';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { useLoginMutation } from '@/redux/features/auth/authApi';
+import { setUser } from '@/redux/features/auth/authSlice';
 
 const schema = z.object({
   email: z.string().email('Invalid email address'),
@@ -13,27 +18,45 @@ const schema = z.object({
 
 type LoginFormData = z.infer<typeof schema>;
 
-const LoginPage: React.FC = () => {
+const Login: React.FC = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<LoginFormData>({
     resolver: zodResolver(schema),
   });
 
+  const user = useAppSelector((state) => state.auth.user);
+
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const [login] = useLoginMutation();
+
   const onSubmit = async (data: LoginFormData) => {
+    const toastId = toast.loading('loading...');
     try {
-      // Replace with actual API call
-      console.log('Form Data:', data);
-      alert('Login successful!');
-      reset();
+      const userInfo = {
+        email: data.email,
+        password: data.password,
+      };
+      const res = await login(userInfo).unwrap();
+      const role = res.data?.user?.role;
+      // const user = verifyToken(res.data.accessToken);
+      dispatch(
+        setUser({ user: res.data?.user, token: res.data?.accessToken })
+      );
+      toast.success('login success!', { id: toastId, duration: 2000 });
+      navigate(`/dashboard/${role}`);
     } catch (error) {
-      console.error('Login failed:', error);
-      alert('Login failed. Please try again.');
+      console.log(error);
+      toast.error('Something went wrong', { id: toastId, duration: 2000 });
     }
   };
+
+  if (user) {
+    return <Navigate to={`/dashboard/${user.role}`} replace={true} />;
+  }
 
   return (
     <div className="flex justify-center min-h-screen py-12 bg-gray-50 sm:px-6 lg:px-8">
@@ -130,4 +153,4 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage;
+export default Login;

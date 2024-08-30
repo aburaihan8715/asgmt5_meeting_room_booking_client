@@ -2,15 +2,16 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion'; // Import Framer Motion
 import SectionHeading from '@/components/ui/SectionHeading';
+import { useAppSelector } from '@/redux/hooks';
 
 const schema = z.object({
   name: z.string().min(1, 'Name is required'),
   email: z.string().email('Invalid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
-  phone: z.string().regex(/^\d{10}$/, 'Phone number must be 10 digits'),
+  phone: z.string().regex(/^\d{11}$/, 'Phone number must be 11 digits'),
   address: z.string().min(1, 'Address is required'),
 });
 
@@ -26,6 +27,7 @@ const Register: React.FC = () => {
     resolver: zodResolver(schema),
   });
 
+  const user = useAppSelector((state) => state.auth.user);
   const onSubmit = async (data: TRegisterFormData) => {
     try {
       console.log('Form Data:', data);
@@ -37,6 +39,9 @@ const Register: React.FC = () => {
     }
   };
 
+  if (user) {
+    return <Navigate to={`/dashboard/${user.role}`} replace={true} />;
+  }
   return (
     <div className="flex justify-center min-h-screen py-12 bg-gray-50 sm:px-6 lg:px-8">
       <motion.div

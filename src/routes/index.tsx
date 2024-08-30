@@ -11,6 +11,9 @@ import Register from '@/pages/auth/Register';
 import { createBrowserRouter } from 'react-router-dom';
 import UserDashboard from '@/pages/dashboard/user/UserDashboard';
 import ErrorPage from '@/pages/ErrorPage';
+import RoomDetails from '@/pages/RoomDetails';
+import BookingProcess from '@/pages/BookingProcess';
+import Checkout from '@/pages/Checkout';
 
 export const router = createBrowserRouter([
   // A) APP LAYOUT ROUTES
@@ -27,12 +30,24 @@ export const router = createBrowserRouter([
         element: <MeetingRooms />,
       },
       {
+        path: 'room-details/:id',
+        element: <RoomDetails />,
+      },
+      {
         path: 'contact',
         element: <ContactUs />,
       },
       {
         path: 'about',
         element: <AboutUs />,
+      },
+      {
+        path: 'booking-process',
+        element: <BookingProcess />,
+      },
+      {
+        path: 'checkout',
+        element: <Checkout />,
       },
     ],
   },
