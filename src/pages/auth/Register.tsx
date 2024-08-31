@@ -2,10 +2,13 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Link, Navigate } from 'react-router-dom';
-import { motion } from 'framer-motion'; // Import Framer Motion
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+
 import SectionHeading from '@/components/ui/SectionHeading';
 import { useAppSelector } from '@/redux/hooks';
+import { toast } from 'sonner';
+import { useUserRegisterMutation } from '@/redux/features/user/userApi';
 
 const schema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -22,26 +25,31 @@ const Register: React.FC = () => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<TRegisterFormData>({
     resolver: zodResolver(schema),
   });
 
+  const [userRegister] = useUserRegisterMutation();
+  const navigate = useNavigate();
   const user = useAppSelector((state) => state.auth.user);
+
   const onSubmit = async (data: TRegisterFormData) => {
+    const toastId = toast.loading('loading...');
     try {
-      console.log('Form Data:', data);
-      alert('Sign up successful!');
-      reset();
+      const registerData = { ...data };
+      await userRegister(registerData).unwrap();
+      toast.success('Register success!', { id: toastId, duration: 2000 });
+      navigate(`/login`);
     } catch (error) {
-      console.error('Sign up failed:', error);
-      alert('Sign up failed. Please try again.');
+      console.log(error);
+      toast.error('Registration failed!', { id: toastId, duration: 2000 });
     }
   };
 
   if (user) {
     return <Navigate to={`/dashboard/${user.role}`} replace={true} />;
   }
+
   return (
     <div className="flex justify-center min-h-screen py-12 bg-gray-50 sm:px-6 lg:px-8">
       <motion.div
