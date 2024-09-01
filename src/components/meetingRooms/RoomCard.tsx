@@ -4,10 +4,12 @@ import { Link } from 'react-router-dom';
 
 interface RoomCardProps {
   room: {
-    id: number;
-    image: string;
+    _id: number;
     name: string;
+    coverImage: string;
+    images: string[];
     capacity: number;
+    amenities: string[];
     pricePerSlot: number;
   };
 }
@@ -15,9 +17,9 @@ interface RoomCardProps {
 const RoomCard = ({ room }: RoomCardProps) => (
   <div className="relative overflow-hidden bg-white rounded-lg shadow-md group">
     <img
-      src={room.image}
+      src={room.coverImage}
       alt={room.name}
-      className="w-full h-40 object-cover rounded"
+      className="object-cover w-full h-40 rounded"
     />
 
     <div className="absolute inset-0 flex items-center justify-center transition-opacity duration-300 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100">

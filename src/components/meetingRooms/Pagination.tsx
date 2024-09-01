@@ -2,19 +2,15 @@ import React from 'react';
 
 interface PaginationProps {
   currentPage: number;
-  totalItems: number;
-  itemsPerPage: number;
+  totalPages: number;
   onPageChange: (page: number) => void;
 }
 
 const Pagination: React.FC<PaginationProps> = ({
   currentPage,
-  totalItems,
-  itemsPerPage,
   onPageChange,
+  totalPages,
 }) => {
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages && page !== currentPage) {
       onPageChange(page);
@@ -29,7 +25,7 @@ const Pagination: React.FC<PaginationProps> = ({
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="px-4 py-2 text-white bg-blue-600 rounded-md disabled:bg-gray-300"
+              className="px-4 py-2 text-white rounded-md bg-primary disabled:bg-gray-300"
             >
               Previous
             </button>
@@ -40,8 +36,8 @@ const Pagination: React.FC<PaginationProps> = ({
                 onClick={() => handlePageChange(index + 1)}
                 className={`px-4 py-2 text-sm font-medium rounded-md ${
                   currentPage === index + 1
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-blue-600 border border-blue-600'
+                    ? 'bg-primary text-white'
+                    : 'bg-white text-primary border border-primary'
                 }`}
               >
                 {index + 1}
@@ -52,7 +48,7 @@ const Pagination: React.FC<PaginationProps> = ({
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="px-4 py-2 text-white bg-blue-600 rounded-md disabled:bg-gray-300"
+              className="px-4 py-2 text-white rounded-md bg-primary disabled:bg-gray-300"
             >
               Next
             </button>

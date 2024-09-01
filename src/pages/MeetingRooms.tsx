@@ -1,156 +1,94 @@
-import FilterBar from '@/components/meetingRooms/FilterBar1';
+import FilterBar from '@/components/meetingRooms/FilterBar';
 import Pagination from '@/components/meetingRooms/Pagination';
 import RoomCard from '@/components/meetingRooms/RoomCard';
+import ErrorMessage from '@/components/ui/ErrorMessage';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+
 import SectionHeading from '@/components/ui/SectionHeading';
+import { useGetAllRoomsQuery } from '@/redux/features/room/roomApi';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 
-interface Room {
-  id: number;
-  image: string;
+import { useDebouncedCallback } from 'use-debounce';
+
+export type TRoom = {
+  _id: number;
   name: string;
+  coverImage: string;
+  images: string[];
+  amenities: string[];
   capacity: number;
   pricePerSlot: number;
-}
+};
 
-const initialRooms: Room[] = [
-  {
-    id: 1,
-    image:
-      'https://cdn.pixabay.com/photo/2017/03/28/12/17/chairs-2181994_960_720.jpg',
-    name: 'Conference Room A',
-    capacity: 20,
-    pricePerSlot: 100,
-  },
-  {
-    id: 2,
-    image:
-      'https://cdn.pixabay.com/photo/2017/03/28/12/17/chairs-2181994_960_720.jpg',
-    name: 'Meeting Room B',
-    capacity: 15,
-    pricePerSlot: 80,
-  },
-  {
-    id: 3,
-    image:
-      'https://cdn.pixabay.com/photo/2017/03/28/12/17/chairs-2181994_960_720.jpg',
-    name: 'Training Room C',
-    capacity: 25,
-    pricePerSlot: 120,
-  },
-  {
-    id: 4,
-    image:
-      'https://cdn.pixabay.com/photo/2017/03/28/12/17/chairs-2181994_960_720.jpg',
-    name: 'Board Room D',
-    capacity: 12,
-    pricePerSlot: 150,
-  },
-  {
-    id: 5,
-    image:
-      'https://cdn.pixabay.com/photo/2017/03/28/12/17/chairs-2181994_960_720.jpg',
-    name: 'Event Hall E',
-    capacity: 100,
-    pricePerSlot: 500,
-  },
-  {
-    id: 6,
-    image:
-      'https://cdn.pixabay.com/photo/2017/03/28/12/17/chairs-2181994_960_720.jpg',
-    name: 'Workshop Room F',
-    capacity: 30,
-    pricePerSlot: 90,
-  },
-  {
-    id: 7,
-    image:
-      'https://cdn.pixabay.com/photo/2017/03/28/12/17/chairs-2181994_960_720.jpg',
-    name: 'Seminar Room G',
-    capacity: 40,
-    pricePerSlot: 110,
-  },
-  {
-    id: 8,
-    image:
-      'https://cdn.pixabay.com/photo/2017/03/28/12/17/chairs-2181994_960_720.jpg',
-    name: 'Interview Room H',
-    capacity: 8,
-    pricePerSlot: 60,
-  },
-  {
-    id: 9,
-    image:
-      'https://cdn.pixabay.com/photo/2017/03/28/12/17/chairs-2181994_960_720.jpg',
-    name: 'Strategy Room I',
-    capacity: 18,
-    pricePerSlot: 140,
-  },
-  {
-    id: 10,
-    image:
-      'https://cdn.pixabay.com/photo/2017/03/28/12/17/chairs-2181994_960_720.jpg',
-    name: 'Breakout Room J',
-    capacity: 10,
-    pricePerSlot: 70,
-  },
-];
-
-const MeetingRoomsPage: React.FC = () => {
+const MeetingRoomsPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filters, setFilters] = useState<{
-    capacity: number | null;
-    price: number | null;
-  }>({ capacity: null, price: null });
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [filterByMinCapacity, setFilterByMinCapacity] = useState('');
+  const [filterByMaxPrice, setFilterByMaxPrice] = useState('');
+  const [sortByPrice, setSortByPrice] = useState('');
+
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 8;
 
-  const filteredAndSortedRooms = initialRooms
-    .filter(
-      (room) =>
-        room.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        (filters.capacity ? room.capacity >= filters.capacity : true) &&
-        (filters.price ? room.pricePerSlot <= filters.price : true)
-    )
-    .sort((a, b) =>
-      sortOrder === 'asc'
-        ? a.pricePerSlot - b.pricePerSlot
-        : b.pricePerSlot - a.pricePerSlot
-    );
+  const searchDebounce = useDebouncedCallback((value) => {
+    setSearchQuery(value);
+  }, 1000);
+  const minCapacityDebounce = useDebouncedCallback((value) => {
+    setFilterByMinCapacity(value);
+  }, 1000);
+  const maxPriceDebounce = useDebouncedCallback((value) => {
+    setFilterByMaxPrice(value);
+  }, 1000);
 
-  const paginatedRooms = filteredAndSortedRooms.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const { data, isLoading, isError } = useGetAllRoomsQuery({
+    searchQuery,
+    filterByMinCapacity,
+    filterByMaxPrice,
+    sortByPrice,
+    page: currentPage,
+    limit: itemsPerPage,
+  });
+  const rooms: TRoom[] = data?.data || [];
+  const meta = data?.meta || {};
 
-  const handleSearch = (query: string) => setSearchQuery(query);
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
-  const handleFilterChange = (newFilters: {
-    capacity: number | null;
-    price: number | null;
-  }) => setFilters(newFilters);
+  const handleClearFilter = () => {
+    setSearchQuery('');
+    setFilterByMinCapacity('');
+    setFilterByMaxPrice('');
+    setSortByPrice('');
+  };
 
-  const handleSortChange = (order: 'asc' | 'desc') => setSortOrder(order);
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
-  const handlePageChange = (page: number) => setCurrentPage(page);
+  if (isError || !rooms) {
+    return <ErrorMessage>Error loading rooms.</ErrorMessage>;
+  }
 
   return (
-    <section className="md:py-20 py-10 px-10">
+    <section className="px-10 py-10 md:py-20">
       <div className="flex justify-center">
         <SectionHeading heading="Meeting Rooms" />
       </div>
       <div className="min-h-screen">
         <FilterBar
-          onSearch={handleSearch}
-          onFilterChange={handleFilterChange}
-          onSortChange={handleSortChange}
+          searchDebounce={searchDebounce}
+          minCapacityDebounce={minCapacityDebounce}
+          maxPriceDebounce={maxPriceDebounce}
+          setSortByPrice={setSortByPrice}
+          handleClearFilter={handleClearFilter}
+          sortByPrice={sortByPrice}
         />
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
-          {paginatedRooms.map((room) => (
+        <div className="grid grid-cols-1 gap-6 mt-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {rooms?.map((room) => (
             <motion.div
-              key={room.id}
-              className="bg-white rounded shadow-lg overflow-hidden"
+              key={room._id}
+              className="overflow-hidden bg-white rounded shadow-lg"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1 }}
@@ -160,16 +98,13 @@ const MeetingRoomsPage: React.FC = () => {
           ))}
         </div>
 
-        {paginatedRooms.length > 0 && (
-          <div className="flex justify-start">
-            <Pagination
-              currentPage={currentPage}
-              totalItems={filteredAndSortedRooms.length}
-              itemsPerPage={itemsPerPage}
-              onPageChange={handlePageChange}
-            />
-          </div>
-        )}
+        <div className="flex justify-start">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={meta?.totalPage}
+            onPageChange={handlePageChange}
+          />
+        </div>
       </div>
     </section>
   );
