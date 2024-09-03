@@ -1,0 +1,10 @@
+
+
+// NOTE:
+pending:
+1. make alias room
+2. room should be stored in redux
+
+
+
+

@@ -1,35 +1,32 @@
+import { Button } from '@/components/ui/button';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { useAppSelector } from '@/redux/hooks';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
-const paymentOptions = ['Credit Card', 'PayPal', 'Bank Transfer'];
+const paymentOptions = ['AamarPay', 'PayPal', 'Stripe'];
 
 const Checkout = () => {
   const [selectedPayment, setSelectedPayment] = useState<string>('');
-
-  const bookingDetails = {
-    roomName: 'Conference Room A',
-    date: '2024-09-15',
-    time: '10:00 AM - 12:00 PM',
-    cost: 200,
-    userInfo: {
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      phone: '+1234567890',
-    },
-  };
+  const user = useAppSelector((state) => state.auth.user);
+  const booking = useAppSelector((state) => state.booking);
 
   const handlePaymentSelection = (option: string) => {
+    if (option == 'AamarPay' || option == 'PayPal') {
+      return Swal.fire({
+        title: 'Very Sorry!',
+        text: `${option} is not implemented yet. Please try stripe!`,
+        icon: 'info',
+        confirmButtonText: 'OK',
+      });
+    }
     setSelectedPayment(option);
   };
 
-  const handleConfirmBooking = () => {
-    Swal.fire({
-      title: 'Booking Confirmed!',
-      text: `Thank you for your booking. You will receive an email with your booking details.`,
-      icon: 'success',
-      confirmButtonText: 'OK',
-    });
-  };
+  if (!user || !booking) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen p-8 bg-gray-50">
@@ -39,27 +36,36 @@ const Checkout = () => {
         </h1>
         <div className="mb-6">
           <p className="text-lg">
-            <strong>Room Name:</strong> {bookingDetails.roomName}
+            <strong>Room Name:</strong> {booking?.roomName}
           </p>
           <p className="text-lg">
-            <strong>Date:</strong> {bookingDetails.date}
+            <strong>Date:</strong> {booking?.date}
           </p>
           <p className="text-lg">
-            <strong>Time:</strong> {bookingDetails.time}
+            {booking?.slotTime.map((item) => (
+              <div key={item}>
+                <strong>Time: </strong>
+                {item}
+              </div>
+            ))}
           </p>
           <p className="text-lg">
-            <strong>Cost:</strong> ${bookingDetails.cost}
+            <strong>Cost:</strong> ${booking?.cost}
           </p>
+
           <div className="mt-4">
             <h2 className="text-lg font-semibold">User Information</h2>
             <p className="mt-2 text-sm">
-              <strong>Name:</strong> {bookingDetails.userInfo.name}
+              <strong>Name:</strong> {user?.name}
             </p>
             <p className="text-sm">
-              <strong>Email:</strong> {bookingDetails.userInfo.email}
+              <strong>Email:</strong> {user?.email}
             </p>
             <p className="text-sm">
-              <strong>Phone:</strong> {bookingDetails.userInfo.phone}
+              <strong>Phone:</strong> {user?.phone}
+            </p>
+            <p className="text-sm">
+              <strong>Address:</strong> {user?.address}
             </p>
           </div>
         </div>
@@ -86,12 +92,15 @@ const Checkout = () => {
         </div>
 
         <div className="flex justify-end">
-          <button
-            onClick={handleConfirmBooking}
-            className="px-6 py-3 text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-700"
-          >
-            Confirm Booking
-          </button>
+          {selectedPayment ? (
+            <Link to="/payment">
+              <Button>Go for payment</Button>
+            </Link>
+          ) : (
+            <Button disabled className="cursor-not-allowed opacity-50">
+              Go for payment
+            </Button>
+          )}
         </div>
       </div>
     </div>

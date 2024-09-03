@@ -1,66 +1,64 @@
+import ErrorMessage from '@/components/ui/ErrorMessage';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import SectionHeading from '@/components/ui/SectionHeading';
+import { useGetRoomQuery } from '@/redux/features/room/roomApi';
+import { TRoom } from '@/types';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-
-interface RoomDetailsProps {
-  id: number;
-  image: string;
-  name: string;
-  roomNumber: string;
-  floorNumber: string;
-  capacity: number;
-  pricePerSlot: number;
-  amenities: string[];
-}
-
-const roomDetails: RoomDetailsProps = {
-  id: 1,
-  image:
-    'https://cdn.pixabay.com/photo/2017/03/28/12/17/chairs-2181994_1280.jpg',
-  name: 'Conference Room A',
-  roomNumber: '101',
-  floorNumber: '1st Floor',
-  capacity: 20,
-  pricePerSlot: 100,
-  amenities: ['Projector', 'Whiteboard', 'Wi-Fi', 'Air Conditioning'],
-};
+import { Link, useParams } from 'react-router-dom';
 
 const RoomDetailsPage: React.FC = () => {
+  const { id } = useParams();
+
+  const { data: room, isLoading, isError } = useGetRoomQuery(id);
+  const roomData: TRoom = room?.data || {};
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (isError) {
+    return <ErrorMessage>Error loading rooms.</ErrorMessage>;
+  }
+
   return (
-    <section className="md:py-20 py-10 px-10">
+    <section className="px-10 py-10 md:py-20">
       <div className="flex justify-center">
         <SectionHeading heading="Room Details" />
       </div>
       <div className="min-h-screen">
-        <div className="shadow-lg rounded-lg overflow-hidden border p-10">
+        <div className="p-10 overflow-hidden border rounded-lg shadow-lg">
           {/* IMAGE */}
-          <motion.div
-            className="h-64"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-          >
-            <img
-              src={roomDetails.image}
-              alt={roomDetails.name}
-              className="w-full h-full object-cover rounded-t-lg"
-            />
-          </motion.div>
+          <div className="flex gap-4">
+            {roomData?.images.slice(0, 2).map((image, index) => (
+              <motion.div
+                key={index}
+                className="h-64 flex-1"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8 }}
+              >
+                <img
+                  src={image}
+                  alt={`room image`}
+                  className="object-cover w-full h-full rounded-t-lg"
+                />
+              </motion.div>
+            ))}
+          </div>
 
           {/* ROOM DETAILS */}
           <div className="p-6 sm:p-8">
             <h1 className="text-2xl font-bold text-gray-800">
-              {roomDetails.name}
+              {roomData.name}
             </h1>
-            <p className="text-sm text-gray-600 mt-2">
-              Room No: {roomDetails.roomNumber} | Floor:{' '}
-              {roomDetails.floorNumber}
+            <p className="mt-2 text-sm text-gray-600">
+              Room No: {roomData.roomNo} | Floor: {roomData.floorNo}
             </p>
-            <p className="text-sm text-gray-600 mt-2">
-              Capacity: {roomDetails.capacity} people
+            <p className="mt-2 text-sm text-gray-600">
+              Capacity: {roomData.capacity} people
             </p>
-            <p className="text-sm text-gray-600 mt-2">
-              Price per Slot: ${roomDetails.pricePerSlot}
+            <p className="mt-2 text-sm text-gray-600">
+              Price per Slot: ${roomData.pricePerSlot}
             </p>
 
             {/* AMENITIES */}
@@ -68,8 +66,8 @@ const RoomDetailsPage: React.FC = () => {
               <h2 className="text-lg font-semibold text-gray-800">
                 Amenities:
               </h2>
-              <ul className="list-disc list-inside mt-2 text-gray-600">
-                {roomDetails.amenities.map((amenity, index) => (
+              <ul className="mt-2 text-gray-600 list-disc list-inside">
+                {roomData.amenities?.map((amenity, index) => (
                   <li key={index}>{amenity}</li>
                 ))}
               </ul>
@@ -78,8 +76,8 @@ const RoomDetailsPage: React.FC = () => {
             {/* BOOK NOW BUTTON */}
             <div className="mt-8">
               <Link
-                to={`/booking/${roomDetails.id}`}
-                className="block w-full px-6 py-3 text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-200"
+                to={`/booking-process/${roomData._id}`}
+                className="block w-full px-6 py-3 text-center text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-700"
               >
                 Book Now
               </Link>

@@ -2,6 +2,7 @@ import { baseApi } from '@/redux/api/baseApi';
 
 const roomApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    // GET ALL
     getAllRooms: builder.query({
       query: ({
         searchQuery,
@@ -33,7 +34,17 @@ const roomApi = baseApi.injectEndpoints({
         };
       },
     }),
+
+    // GET ONE
+    getRoom: builder.query({
+      query: (id) => {
+        return {
+          url: `api/rooms/${id}`,
+          method: 'GET',
+        };
+      },
+    }),
   }),
 });
 
-export const { useGetAllRoomsQuery } = roomApi;
+export const { useGetAllRoomsQuery, useGetRoomQuery } = roomApi;

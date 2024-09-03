@@ -1,44 +1,11 @@
-const mainData = {
-  data1: {
-    firstName: 'Abu',
-    middleName: 'Raihan',
-    lastName: 'Sharif',
-  },
-  data2: [
-    {
-      name: 'Abu Raihan',
-      age: 29,
-      occupation: 'student',
-    },
-    {
-      name: 'Abul',
-      age: 40,
-      occupation: 'teacher',
-    },
-    {
-      name: 'Babul',
-      age: 50,
-      occupation: 'businessman',
-    },
-  ],
-  data3: [5, 9, 6, 8, 10, 25],
-  data4: ['Abul', 'Babul', 'Cabul', 'Dabul'],
-  data5: 'Dhaka Bangladesh',
-  data6: 25,
-};
+import moment from 'moment';
 
-const { data1, data2, data3, data4, ...remainingData } = mainData;
+const x = 'Sat Jun 15 2024 00:00:00 GMT+0600 (Bangladesh Standard Time)';
+const x2 = null;
 
-const modifiedData = { ...remainingData };
+const date = new Date(`${x2}`);
 
-// console.log(remainingData);
-// console.log(modifiedData);
-// console.log(Object.keys(data1).length);
+// Manually set the day to 25
+const formattedDate = moment(date).date(25).format('YYYY-MM-DD');
 
-if (data1 && Object.keys(data1).length) {
-  for (const [key, value] of Object.entries(data1)) {
-    modifiedData[`data1.${key}`] = value;
-  }
-}
-
-console.log(modifiedData);
+console.log(formattedDate); // Outputs: 2024-06-25

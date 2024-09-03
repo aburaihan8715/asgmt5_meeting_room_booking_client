@@ -14,6 +14,7 @@ import ErrorPage from '@/pages/ErrorPage';
 import RoomDetails from '@/pages/RoomDetails';
 import BookingProcess from '@/pages/BookingProcess';
 import Checkout from '@/pages/Checkout';
+import Payment from '@/pages/Payment';
 
 export const router = createBrowserRouter([
   // A) APP LAYOUT ROUTES
@@ -42,12 +43,16 @@ export const router = createBrowserRouter([
         element: <AboutUs />,
       },
       {
-        path: 'booking-process',
+        path: 'booking-process/:roomId',
         element: <BookingProcess />,
       },
       {
         path: 'checkout',
         element: <Checkout />,
+      },
+      {
+        path: 'payment',
+        element: <Payment />,
       },
     ],
   },

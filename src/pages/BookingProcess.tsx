@@ -1,129 +1,172 @@
-import { Calendar } from '@/components/ui/calendar';
+import { Button } from '@/components/ui/button';
+
+import { useNavigate, useParams } from 'react-router-dom';
+import { useGetAllSlotsQuery } from '@/redux/features/slot/slotApi';
+import { TSlot } from '@/types/slotData.type';
+import DatePicker from 'react-datepicker';
+import { MultiSelect } from 'react-multi-select-component';
+import moment from 'moment';
+
+import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { createBooking } from '@/redux/features/booking/bookingSlice';
+import { useGetRoomQuery } from '@/redux/features/room/roomApi';
 
-import { Link } from 'react-router-dom';
+const BookingProcess: React.FC = () => {
+  const { roomId } = useParams();
 
-interface BookingFormProps {
-  user: {
-    name: string;
-    email: string;
-    phone: string;
-  };
-  availableSlots: { time: string; isBooked: boolean }[];
-}
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedSlots, setSelectedSlots] = useState<
+    { label: string; value: string }[]
+  >([]);
+  const user = useAppSelector((state) => state.auth.user);
 
-const user = {
-  name: 'John Doe',
-  email: 'johndoe@example.com',
-  phone: '+1234567890',
-};
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-const availableSlots = [
-  { time: '09:00 AM - 10:00 AM', isBooked: false },
-  { time: '10:00 AM - 11:00 AM', isBooked: true },
-  { time: '11:00 AM - 12:00 PM', isBooked: false },
-  { time: '12:00 PM - 01:00 PM', isBooked: true },
-  // Add more slots as needed
-];
+  const { data: allSlotsData, isLoading: allSlotDataLoading } =
+    useGetAllSlotsQuery({ room: roomId });
+  const { data: roomData, isLoading: roomLoading } =
+    useGetRoomQuery(roomId);
 
-const BookingForm: React.FC<BookingFormProps> = ({
-  user,
-  availableSlots,
-}) => {
-  // const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const uniqueDates = [
+    ...new Set(allSlotsData?.data?.map((item: TSlot) => item.date)),
+  ];
 
-  // const handleDateChange = (date: Date) => setSelectedDate(date);
+  const allowedDates = uniqueDates.map((date) => new Date(`${date}`));
 
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const formattedDate = selectedDate
+    ? selectedDate.toLocaleDateString('en-CA')
+    : null;
 
-  const handleTimeSelection = (time: string) => setSelectedTime(time);
-
-  const availableTimeSlots = availableSlots.filter(
-    (slot) => !slot.isBooked
+  const { data: filteredSlotsData } = useGetAllSlotsQuery(
+    {
+      room: roomId!,
+      date: formattedDate!,
+    },
+    {
+      skip: !roomId || !formattedDate,
+    }
   );
 
-  return (
-    <div className="min-h-screen">
-      <div className="shadow-lg rounded-lg overflow-hidden">
-        {/* DATE SELECTION */}
-        <div className="p-6 sm:p-8">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            Select Booking Date
-          </h2>
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={setDate}
-            className="rounded-md border"
-          />
-        </div>
+  const slots: TSlot[] = filteredSlotsData?.data || [];
 
-        {/* TIME SLOT SELECTION */}
-        <div className="p-6 sm:p-8 border-t">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            Select Time Slot
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {availableTimeSlots.map((slot, index) => (
-              <button
-                key={index}
-                onClick={() => handleTimeSelection(slot.time)}
-                className={`w-full py-2 px-4 text-center rounded-lg ${
-                  selectedTime === slot.time
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-200 text-gray-800'
-                } hover:bg-blue-500 hover:text-white transition duration-200`}
-              >
-                {slot.time}
-              </button>
-            ))}
+  const slotOptions = slots?.map((slot) => {
+    return {
+      label: `${slot.startTime} - ${slot.endTime}`,
+      value: slot?._id,
+    };
+  });
+
+  const handleBooking = async () => {
+    const bookingData = {
+      date: moment(selectedDate).format('YYYY-MM-DD'),
+      slots: selectedSlots.map((item) => item?.value),
+      slotTime: selectedSlots.map((item) => item?.label),
+      room: roomId,
+      roomName: roomData?.data?.name,
+      user: user?._id,
+      cost: roomData?.data?.pricePerSlot * selectedSlots?.length,
+    };
+
+    dispatch(createBooking(bookingData));
+    navigate('/checkout');
+  };
+
+  if (allSlotDataLoading || !user || roomLoading) {
+    return <LoadingSpinner />;
+  }
+  return (
+    <section className="min-h-screen">
+      <div className="overflow-hidden rounded-lg shadow-lg">
+        <div className="flex">
+          {/* DATE SELECTION */}
+          <div className="p-6 sm:p-10">
+            <h2 className="mb-4 text-xl font-semibold text-gray-800">
+              Select Booking Date
+            </h2>
+
+            <div className="overflow-hidden border rounded w-fit">
+              <DatePicker
+                dateFormat="yyyy/MM/dd"
+                showIcon
+                selected={selectedDate}
+                onChange={(date) => setSelectedDate(date!)}
+                includeDates={allowedDates}
+                disabled={allowedDates.length < 1}
+                placeholderText={
+                  allowedDates.length < 1
+                    ? 'Loading...'
+                    : 'Select available date'
+                }
+              />
+            </div>
+          </div>
+
+          {/* TIME SLOT SELECTION */}
+          <div className="p-6 sm:p-10">
+            <h2 className="mb-4 text-xl font-semibold text-gray-800">
+              Select available slots
+            </h2>
+
+            <MultiSelect
+              options={slotOptions}
+              disabled={!selectedDate}
+              value={selectedSlots}
+              onChange={setSelectedSlots}
+              labelledBy="Select"
+            />
           </div>
         </div>
 
         {/* USER INFORMATION FORM */}
-        <div className="p-6 sm:p-8 border-t">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+        <div className="p-6 border-t sm:p-10">
+          <h2 className="mb-4 text-xl font-semibold text-gray-800">
             User Information
           </h2>
-          <form className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <form className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <input
               type="text"
               defaultValue={user.name}
               disabled
-              className="w-full px-4 py-2 border rounded-lg bg-gray-100 text-gray-600"
+              className="w-full px-4 py-2 text-gray-600 bg-gray-100 border rounded-lg"
             />
             <input
               type="email"
               defaultValue={user.email}
               disabled
-              className="w-full px-4 py-2 border rounded-lg bg-gray-100 text-gray-600"
+              className="w-full px-4 py-2 text-gray-600 bg-gray-100 border rounded-lg"
             />
             <input
               type="tel"
               defaultValue={user.phone}
               disabled
-              className="w-full px-4 py-2 border rounded-lg bg-gray-100 text-gray-600"
+              className="w-full px-4 py-2 text-gray-600 bg-gray-100 border rounded-lg"
+            />
+            <input
+              type="text"
+              defaultValue={user.address}
+              disabled
+              className="w-full px-4 py-2 text-gray-600 bg-gray-100 border rounded-lg"
             />
           </form>
         </div>
 
-        {/* BOOK NOW BUTTON */}
-        <div className="p-6 sm:p-8 border-t flex justify-end">
-          <Link
-            to="/confirmation"
-            className="px-6 py-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-200"
+        {/* CHECKOUT BUTTON */}
+
+        <div className="flex justify-end p-6 border-t sm:p-10">
+          <Button
+            disabled={!selectedDate || selectedSlots.length < 1}
+            onClick={handleBooking}
           >
-            Book Now
-          </Link>
+            Checkout Now
+          </Button>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
-
-const BookingProcess: React.FC = () => (
-  <BookingForm user={user} availableSlots={availableSlots} />
-);
 
 export default BookingProcess;

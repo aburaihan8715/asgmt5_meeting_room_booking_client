@@ -6,20 +6,11 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 import SectionHeading from '@/components/ui/SectionHeading';
 import { useGetAllRoomsQuery } from '@/redux/features/room/roomApi';
+import { TRoom } from '@/types';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 
 import { useDebouncedCallback } from 'use-debounce';
-
-export type TRoom = {
-  _id: number;
-  name: string;
-  coverImage: string;
-  images: string[];
-  amenities: string[];
-  capacity: number;
-  pricePerSlot: number;
-};
 
 const MeetingRoomsPage = () => {
   const [searchQuery, setSearchQuery] = useState('');

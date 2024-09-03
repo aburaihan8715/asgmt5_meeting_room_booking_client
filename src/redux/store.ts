@@ -15,18 +15,31 @@ import {
 import storage from 'redux-persist/lib/storage';
 
 import authReducer from './features/auth/authSlice';
+import bookingReducer from './features/booking/bookingSlice';
 
-const persistConfig = {
+const authPersistConfig = {
   key: 'auth',
   storage,
 };
+const bookingPersistConfig = {
+  key: 'booking',
+  storage,
+};
 
-const persistedAuthReducer = persistReducer(persistConfig, authReducer);
+const persistedAuthReducer = persistReducer(
+  authPersistConfig,
+  authReducer
+);
+const persistedBookingReducer = persistReducer(
+  bookingPersistConfig,
+  bookingReducer
+);
 
 export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
     auth: persistedAuthReducer,
+    booking: persistedBookingReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
