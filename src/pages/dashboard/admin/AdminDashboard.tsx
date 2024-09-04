@@ -29,7 +29,7 @@ interface Booking {
 
 const AdminDashboard: React.FC = () => {
   // Dummy data for demonstration
-  const [rooms, setRooms] = useState<Room[]>([
+  const [rooms] = useState<Room[]>([
     {
       id: 1,
       name: 'Conference Room A',
@@ -48,7 +48,7 @@ const AdminDashboard: React.FC = () => {
     },
   ]);
 
-  const [slots, setSlots] = useState<Slot[]>([
+  const [slots] = useState<Slot[]>([
     {
       id: 1,
       roomName: 'Conference Room A',
@@ -93,26 +93,32 @@ const AdminDashboard: React.FC = () => {
   };
 
   const handleUpdateRoom = (room: Room) => {
+    console.log(room);
     // Logic to update room details
   };
 
   const handleDeleteRoom = (roomId: number) => {
+    console.log(roomId);
     // Logic to delete a room
   };
 
   const handleUpdateSlot = (slot: Slot) => {
+    console.log(slot);
     // Logic to update slot details
   };
 
   const handleDeleteSlot = (slotId: number) => {
+    console.log(slotId);
     // Logic to delete a slot
   };
 
   const handleApproveBooking = (bookingId: number) => {
+    console.log(bookingId);
     // Logic to approve a booking
   };
 
   const handleRejectBooking = (bookingId: number) => {
+    console.log(bookingId);
     // Logic to reject a booking
   };
 

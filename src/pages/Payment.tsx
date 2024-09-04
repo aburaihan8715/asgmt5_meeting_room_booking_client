@@ -3,8 +3,7 @@ import SectionHeading from '@/components/ui/SectionHeading';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 
-// NOTE: Need to change PK
-const stripePromise = loadStripe('pk_test_6pRNASCoBOKtIshFeQd4XMUh');
+const stripePromise = loadStripe(import.meta.env.VITE_stripe_PK);
 
 const Payment = () => {
   return (

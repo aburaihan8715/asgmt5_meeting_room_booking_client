@@ -4,41 +4,89 @@ import {
   CardElement,
 } from '@stripe/react-stripe-js';
 import { Button } from '../ui/button';
-import { FormEvent } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
+
+import { useCreatePaymentIntentMutation } from '@/redux/features/payment/paymentApi';
+import { useAppSelector } from '@/redux/hooks';
 
 const CheckoutForm = () => {
   const stripe = useStripe();
   const elements = useElements();
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [createPaymentIntent] = useCreatePaymentIntentMutation();
+  const [isLoading, setIsLoading] = useState(false);
+  const price = 20;
+
+  const user = useAppSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    if (price > 0) {
+      const getClientSecret = async () => {
+        try {
+          const res = await createPaymentIntent({ price }).unwrap();
+          setClientSecret(res?.data?.clientSecret || null);
+        } catch (error) {
+          console.error('Error getting client secret:', error);
+        }
+      };
+      getClientSecret();
+    }
+  }, [createPaymentIntent, price]);
 
   const handleSubmit = async (event: FormEvent) => {
-    // Block native form submission.
     event.preventDefault();
+    setIsLoading(true);
 
-    if (!stripe || !elements) {
-      // Stripe.js has not loaded yet. Make sure to disable
-      // form submission until Stripe.js has loaded.
+    if (!stripe || !elements || !price || !clientSecret) {
+      console.error(
+        'Stripe.js has not loaded or clientSecret is missing.'
+      );
+      setIsLoading(false);
       return;
     }
 
-    // Get a reference to a mounted CardElement. Elements knows how
-    // to find your CardElement because there can only ever be one of
-    // each type of element.
     const card = elements.getElement(CardElement);
 
-    if (card == null) {
+    if (!card) {
+      console.error('Card Element is not found.');
+      setIsLoading(false);
       return;
     }
 
-    // Use your card Element with other Stripe.js APIs
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: 'card',
-      card,
-    });
+    try {
+      const { error, paymentMethod } = await stripe.createPaymentMethod({
+        type: 'card',
+        card,
+        billing_details: {
+          email: user?.email || 'unknown',
+          name: user?.name || 'anonymous',
+        },
+      });
 
-    if (error) {
-      console.log('[error]', error);
-    } else {
-      console.log('[PaymentMethod]', paymentMethod);
+      if (error) {
+        console.error('[Payment Method Error]', error);
+        setIsLoading(false);
+        return;
+      }
+
+      const { paymentIntent, error: intentError } =
+        await stripe.confirmCardPayment(clientSecret, {
+          payment_method: paymentMethod.id,
+        });
+
+      if (intentError) {
+        console.error('[Payment Intent Error]', intentError);
+        setIsLoading(false);
+        return;
+      }
+
+      if (paymentIntent?.status === 'succeeded') {
+        console.log('Payment succeeded:', paymentIntent);
+      }
+    } catch (error) {
+      console.error('Payment Error:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -68,9 +116,9 @@ const CheckoutForm = () => {
         <Button
           className="w-full text-lg"
           type="submit"
-          disabled={!stripe}
+          disabled={!stripe || isLoading || !clientSecret}
         >
-          Pay
+          {isLoading ? 'Processing...' : 'Pay'}
         </Button>
       </div>
     </form>
