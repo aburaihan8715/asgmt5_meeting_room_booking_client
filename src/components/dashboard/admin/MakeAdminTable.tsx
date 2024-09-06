@@ -19,6 +19,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -30,33 +31,39 @@ import {
 import { useState } from 'react';
 
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { useDebouncedCallback } from 'use-debounce';
 import Pagination from '@/components/ui/Pagination';
-import { useGetAllBookingsQuery } from '@/redux/features/booking/bookingApi';
-import { TBooking } from '@/types/bookingData.type';
-import { Badge } from '@/components/ui/badge';
+import { useGetAllUsersQuery } from '@/redux/features/user/userApi';
+import { TUser } from '@/types/userData.type';
 
-const BookingManagementTable = () => {
+const MakeAdminTable = () => {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [columnVisibility, setColumnVisibility] =
     useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
+  const searchDebounce = useDebouncedCallback((value) => {
+    setSearchQuery(value);
+  }, 1000);
+
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 5;
 
-  const { data: bookingsData, isLoading: isBookingsLoading } =
-    useGetAllBookingsQuery({
+  const { data: usersData, isLoading: isUsersLoading } =
+    useGetAllUsersQuery({
+      searchQuery,
       page: currentPage,
       limit: itemsPerPage,
     });
-  const bookings: TBooking[] = bookingsData?.data || [];
-  const meta = bookingsData?.meta || {};
+  const users: TUser[] = usersData?.data || [];
+  const meta = usersData?.meta || {};
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-  const columns: ColumnDef<TBooking>[] = [
+  const columns: ColumnDef<TUser>[] = [
     {
       id: 'select',
       header: ({ table }) => (
@@ -83,73 +90,40 @@ const BookingManagementTable = () => {
     },
 
     {
-      accessorKey: 'room.name',
-      header: 'Room Name',
-      cell: ({ row }) => {
-        const roomName = row.original?.room?.name;
-        return (
-          <div className="capitalize whitespace-nowrap">{roomName}</div>
-        );
-      },
-    },
-
-    {
-      accessorKey: 'user.name',
+      accessorKey: 'name',
       header: 'User Name',
-      cell: ({ row }) => {
-        const userName = row.original?.user?.name;
-        return (
-          <div className="capitalize whitespace-nowrap">{userName}</div>
-        );
-      },
+      cell: ({ row }) => (
+        <div className="capitalize whitespace-nowrap">
+          {row.getValue('name')}
+        </div>
+      ),
     },
 
     {
-      accessorKey: 'slots',
-      header: 'Slot Date & Times',
-      cell: ({ row }) => {
-        const slots = row.original?.slots || [];
-        return (
-          <div>
-            {slots.map((slot: any, index: number) => (
-              <div
-                className="whitespace-nowrap"
-                key={`${slot._id}-${index}`}
-              >
-                {slot.date} / {slot.startTime} - {slot.endTime}
-              </div>
-            ))}
-          </div>
-        );
-      },
+      accessorKey: 'email',
+      header: 'Email',
+      cell: ({ row }) => (
+        <div className="capitalize whitespace-nowrap">
+          {row.getValue('email')}
+        </div>
+      ),
     },
 
     {
-      accessorKey: 'isConfirmed',
-      header: 'Status',
-      cell: ({ row }) => {
-        return (
-          <div className="capitalize whitespace-nowrap">
-            {row.getValue('isConfirmed')}
-          </div>
-        );
-      },
+      accessorKey: 'role',
+      header: 'Role',
+      cell: ({ row }) => <div className="">{row.getValue('role')}</div>,
     },
 
     {
       id: 'actions',
       header: 'Actions',
       cell: ({ row }) => {
-        const id = row.original._id;
-        console.log(id);
+        const role = row.original.role;
+
         return (
           <div className="flex items-center gap-4">
-            <button>
-              <Badge variant="default">Approve</Badge>
-            </button>
-            <button>
-              <Badge variant="destructive">Delete</Badge>
-            </button>
+            <Button disabled={role === 'admin'}>Make Admin</Button>
           </div>
         );
       },
@@ -157,7 +131,7 @@ const BookingManagementTable = () => {
   ];
 
   const table = useReactTable({
-    data: bookings,
+    data: users,
     columns,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
@@ -173,11 +147,20 @@ const BookingManagementTable = () => {
     },
   });
 
-  if (isBookingsLoading) return <LoadingSpinner />;
+  if (isUsersLoading) return <LoadingSpinner />;
 
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
+        <Input
+          type="search"
+          name="search"
+          id="search"
+          onChange={(e) => searchDebounce(e.target.value)}
+          placeholder="Search by room name..."
+          className="max-w-sm"
+        />
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -268,4 +251,4 @@ const BookingManagementTable = () => {
     </div>
   );
 };
-export default BookingManagementTable;
+export default MakeAdminTable;

@@ -11,10 +11,10 @@ const bookingApi = baseApi.injectEndpoints({
       }),
     }),
 
-    // NOTE: need to update GET MY BOOKINGS
+    // GET MY BOOKINGS
     getMyBookingsFromDB: builder.query({
       query: ({ page, limit }) => {
-        let queryString = `/api/bookings`;
+        let queryString = `/api/my-bookings`;
 
         const params = new URLSearchParams();
 
@@ -29,7 +29,8 @@ const bookingApi = baseApi.injectEndpoints({
         };
       },
     }),
-    // NOTE: need to update GET ALL
+
+    // GET ALL BOOKINGS
     getAllBookings: builder.query({
       query: ({ page, limit }) => {
         let queryString = `/api/bookings`;

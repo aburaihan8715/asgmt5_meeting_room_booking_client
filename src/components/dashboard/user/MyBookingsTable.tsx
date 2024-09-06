@@ -31,11 +31,10 @@ import { useState } from 'react';
 
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Pagination from '@/components/ui/Pagination';
-import { useGetAllBookingsQuery } from '@/redux/features/booking/bookingApi';
+import { useGetMyBookingsFromDBQuery } from '@/redux/features/booking/bookingApi';
 import { TBooking } from '@/types/bookingData.type';
-import { Badge } from '@/components/ui/badge';
 
-const BookingManagementTable = () => {
+const MyBookingsTable = () => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] =
     useState<VisibilityState>({});
@@ -45,7 +44,7 @@ const BookingManagementTable = () => {
   const itemsPerPage = 5;
 
   const { data: bookingsData, isLoading: isBookingsLoading } =
-    useGetAllBookingsQuery({
+    useGetMyBookingsFromDBQuery({
       page: currentPage,
       limit: itemsPerPage,
     });
@@ -94,17 +93,6 @@ const BookingManagementTable = () => {
     },
 
     {
-      accessorKey: 'user.name',
-      header: 'User Name',
-      cell: ({ row }) => {
-        const userName = row.original?.user?.name;
-        return (
-          <div className="capitalize whitespace-nowrap">{userName}</div>
-        );
-      },
-    },
-
-    {
       accessorKey: 'slots',
       header: 'Slot Date & Times',
       cell: ({ row }) => {
@@ -131,25 +119,6 @@ const BookingManagementTable = () => {
         return (
           <div className="capitalize whitespace-nowrap">
             {row.getValue('isConfirmed')}
-          </div>
-        );
-      },
-    },
-
-    {
-      id: 'actions',
-      header: 'Actions',
-      cell: ({ row }) => {
-        const id = row.original._id;
-        console.log(id);
-        return (
-          <div className="flex items-center gap-4">
-            <button>
-              <Badge variant="default">Approve</Badge>
-            </button>
-            <button>
-              <Badge variant="destructive">Delete</Badge>
-            </button>
           </div>
         );
       },
@@ -268,4 +237,4 @@ const BookingManagementTable = () => {
     </div>
   );
 };
-export default BookingManagementTable;
+export default MyBookingsTable;

@@ -52,8 +52,6 @@ const SlotsManagementTable = () => {
 
   const slots: TSlot[] = slotsData?.data || [];
   const meta = slotsData?.meta || {};
-  console.log(slots);
-  console.log(meta);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);

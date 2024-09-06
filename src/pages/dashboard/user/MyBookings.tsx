@@ -1,19 +1,19 @@
-import MakeAdminTable from '@/components/dashboard/admin/MakeAdminTable';
+import MyBookingsTable from '@/components/dashboard/user/MyBookingsTable';
 import SectionHeading from '@/components/ui/SectionHeading';
 
-const MakeAdmin = () => {
+const MyBookings = () => {
   return (
     <section>
       <div>
         <div className="flex justify-center">
-          <SectionHeading heading="Make Admin" />
+          <SectionHeading heading="My Bookings" />
         </div>
         <div>
-          <MakeAdminTable />
+          <MyBookingsTable />
         </div>
       </div>
     </section>
   );
 };
 
-export default MakeAdmin;
+export default MyBookings;

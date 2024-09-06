@@ -3,7 +3,6 @@ import DashboardLayout from '@/components/layouts/DashboardLayout';
 import AboutUs from '@/pages/AboutUs';
 import ContactUs from '@/pages/ContactUs';
 import AdminDashboard from '@/pages/dashboard/admin/AdminDashboard';
-import MyBooking from '@/pages/dashboard/user/MyBooking';
 import Home from '@/pages/Home';
 import Login from '@/pages/auth/Login';
 import MeetingRooms from '@/pages/MeetingRooms';
@@ -19,6 +18,7 @@ import ProtectedRoute from '@/components/layouts/ProtectedRoute';
 import CreateRoom from '@/pages/dashboard/admin/CreateRoom';
 import CreateSlot from '@/pages/dashboard/admin/CreateSlot';
 import MakeAdmin from '@/pages/dashboard/admin/MakeAdmin';
+import MyBookings from '@/pages/dashboard/user/MyBookings';
 
 export const router = createBrowserRouter([
   // A) APP LAYOUT ROUTES
@@ -115,10 +115,10 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'my-booking',
+        path: 'my-bookings',
         element: (
           <ProtectedRoute role="user">
-            <MyBooking />
+            <MyBookings />
           </ProtectedRoute>
         ),
       },
