@@ -1,8 +1,8 @@
 import FilterBar from '@/components/meetingRooms/FilterBar';
-import Pagination from '@/components/meetingRooms/Pagination';
 import RoomCard from '@/components/meetingRooms/RoomCard';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import Pagination from '@/components/ui/Pagination';
 
 import SectionHeading from '@/components/ui/SectionHeading';
 import { useGetAllRoomsQuery } from '@/redux/features/room/roomApi';

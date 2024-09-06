@@ -41,14 +41,10 @@ const Checkout = () => {
           <p className="text-lg">
             <strong>Date:</strong> {booking?.date}
           </p>
-          <p className="text-lg">
-            {booking?.slotTime.map((item) => (
-              <div key={item}>
-                <strong>Time: </strong>
-                {item}
-              </div>
-            ))}
-          </p>
+          <div className="text-lg">
+            <strong>Time: </strong>
+            {booking?.slotTime.join(', ')}
+          </div>
           <p className="text-lg">
             <strong>Cost:</strong> ${booking?.cost}
           </p>
@@ -97,7 +93,7 @@ const Checkout = () => {
               <Button>Go for payment</Button>
             </Link>
           ) : (
-            <Button disabled className="cursor-not-allowed opacity-50">
+            <Button disabled className="opacity-50 cursor-not-allowed">
               Go for payment
             </Button>
           )}

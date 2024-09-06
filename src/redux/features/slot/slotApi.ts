@@ -4,13 +4,15 @@ const roomApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // GET ALL
     getAllSlots: builder.query({
-      query: ({ date, room }) => {
+      query: ({ date, room, page, limit }) => {
         let queryString = `/api/slots/availability`;
 
         const params = new URLSearchParams();
 
         if (date) params.append('date', date);
         if (room) params.append('room', room);
+        if (page) params.append('page', page);
+        if (limit) params.append('limit', limit);
 
         if (params.toString()) queryString += `?${params.toString()}`;
 

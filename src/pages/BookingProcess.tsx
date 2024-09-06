@@ -13,6 +13,8 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { createBooking } from '@/redux/features/booking/bookingSlice';
 import { useGetRoomQuery } from '@/redux/features/room/roomApi';
+import { useCreateBookingIntoDBMutation } from '@/redux/features/booking/bookingApi';
+import ErrorMessage from '@/components/ui/ErrorMessage';
 
 const BookingProcess: React.FC = () => {
   const { roomId } = useParams();
@@ -22,12 +24,16 @@ const BookingProcess: React.FC = () => {
     { label: string; value: string }[]
   >([]);
   const user = useAppSelector((state) => state.auth.user);
+  const [createBookingIntoDB] = useCreateBookingIntoDBMutation();
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { data: allSlotsData, isLoading: allSlotDataLoading } =
-    useGetAllSlotsQuery({ room: roomId });
+  const {
+    data: allSlotsData,
+    isLoading: allSlotDataLoading,
+    isError: allSlotDataError,
+  } = useGetAllSlotsQuery({ room: roomId });
   const { data: roomData, isLoading: roomLoading } =
     useGetRoomQuery(roomId);
 
@@ -61,7 +67,7 @@ const BookingProcess: React.FC = () => {
   });
 
   const handleBooking = async () => {
-    const bookingData = {
+    const bookingDataForRedux = {
       date: moment(selectedDate).format('YYYY-MM-DD'),
       slots: selectedSlots.map((item) => item?.value),
       slotTime: selectedSlots.map((item) => item?.label),
@@ -70,14 +76,25 @@ const BookingProcess: React.FC = () => {
       user: user?._id,
       cost: roomData?.data?.pricePerSlot * selectedSlots?.length,
     };
-
-    dispatch(createBooking(bookingData));
+    const bookingDataForDB = {
+      date: moment(selectedDate).format('YYYY-MM-DD'),
+      slots: selectedSlots.map((item) => item?.value),
+      room: roomId,
+      user: user?._id,
+    };
+    await createBookingIntoDB(bookingDataForDB);
+    dispatch(createBooking(bookingDataForRedux));
     navigate('/checkout');
   };
 
   if (allSlotDataLoading || !user || roomLoading) {
     return <LoadingSpinner />;
   }
+
+  if (allSlotDataError) {
+    return <ErrorMessage>Error while slot loading.</ErrorMessage>;
+  }
+
   return (
     <section className="min-h-screen">
       <div className="overflow-hidden rounded-lg shadow-lg">

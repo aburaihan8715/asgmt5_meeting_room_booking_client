@@ -7,7 +7,7 @@ type TBookingState = {
   slots: string[];
   slotTime: string[];
   user: string;
-  cost: number | string;
+  cost: number;
 };
 
 const initialState: TBookingState = {
@@ -17,7 +17,7 @@ const initialState: TBookingState = {
   slots: [],
   slotTime: [],
   user: '',
-  cost: '',
+  cost: 0,
 };
 export const bookingSlice = createSlice({
   name: 'booking',

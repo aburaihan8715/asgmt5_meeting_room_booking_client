@@ -1,33 +1,71 @@
+import { useAppSelector } from '@/redux/hooks';
 import ActiveLink from '../ui/ActiveLink';
 
-import { FaClipboardList, FaHome, FaPlusSquare } from 'react-icons/fa';
+import { FaHome, FaPlusSquare } from 'react-icons/fa';
 
 const Sidebar = () => {
+  const { user } = useAppSelector((state) => state.auth);
   return (
     <nav>
-      <ul className="flex flex-col gap-4">
-        <li className="flex">
-          <ActiveLink className="flex items-center gap-2" to="/">
-            <FaHome className="text-2xl md:text-base" />
-            <span className="hidden md:block">Home</span>
-          </ActiveLink>
-        </li>
-        <li className="flex">
-          <ActiveLink
-            className="flex items-center gap-2"
-            to="product-list"
-          >
-            <FaClipboardList className="text-2xl md:text-base" />
-            <span className="hidden md:block">Product List</span>
-          </ActiveLink>
-        </li>
-        <li className="flex">
-          <ActiveLink className="flex items-center gap-2" to="add-product">
-            <FaPlusSquare className="text-2xl md:text-base" />
-            <span className="hidden md:block">Add Product</span>
-          </ActiveLink>
-        </li>
-      </ul>
+      {/* ADMIN ROUTES */}
+      {user?.role === 'admin' && (
+        <ul className="flex flex-col gap-4">
+          <li className="flex">
+            <ActiveLink className="flex items-center gap-2" to="/">
+              <FaHome className="text-2xl md:text-base" />
+              <span className="hidden md:block">Home</span>
+            </ActiveLink>
+          </li>
+          <li className="flex">
+            <ActiveLink
+              className="flex items-center gap-2"
+              to="/dashboard/create-room"
+            >
+              <FaPlusSquare className="text-2xl md:text-base" />
+              <span className="hidden md:block">Create Room</span>
+            </ActiveLink>
+          </li>
+          <li className="flex">
+            <ActiveLink
+              className="flex items-center gap-2"
+              to="/dashboard/create-slot"
+            >
+              <FaPlusSquare className="text-2xl md:text-base" />
+              <span className="hidden md:block">Create Slot</span>
+            </ActiveLink>
+          </li>
+          <li className="flex">
+            <ActiveLink
+              className="flex items-center gap-2"
+              to="/dashboard/make-admin"
+            >
+              <FaPlusSquare className="text-2xl md:text-base" />
+              <span className="hidden md:block">Make Admin</span>
+            </ActiveLink>
+          </li>
+        </ul>
+      )}
+
+      {/* USER ROUTES */}
+      {user?.role === 'user' && (
+        <ul className="flex flex-col gap-4">
+          <li className="flex">
+            <ActiveLink className="flex items-center gap-2" to="/">
+              <FaHome className="text-2xl md:text-base" />
+              <span className="hidden md:block">Home</span>
+            </ActiveLink>
+          </li>
+          <li className="flex">
+            <ActiveLink
+              className="flex items-center gap-2"
+              to="/dashboard/my-bookings"
+            >
+              <FaPlusSquare className="text-2xl md:text-base" />
+              <span className="hidden md:block">My Bookings</span>
+            </ActiveLink>
+          </li>
+        </ul>
+      )}
     </nav>
   );
 };

@@ -15,11 +15,12 @@ import {
 } from '@/components/ui/popover';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { logout } from '@/redux/features/auth/authSlice';
+import { useDispatch } from 'react-redux';
 
 // HEADER COMPONENT
 const Header = () => {
   const [open, setOpen] = useState(true);
-  const user = useAppSelector((state) => state.auth.user);
+  const { user } = useAppSelector((state) => state.auth);
   const role = user?.role;
   const name = user?.name;
   const dispatch = useAppDispatch();
@@ -146,6 +147,7 @@ export default Header;
 
 // PROFILE POPOVER COMPONENT
 const ProfilePopover = ({ role }: { role: string }) => {
+  const dispatch = useDispatch();
   return (
     <Popover>
       <PopoverTrigger>
@@ -167,7 +169,10 @@ const ProfilePopover = ({ role }: { role: string }) => {
               >
                 Dashboard
               </Link>
-              <button className="text-left border-b-2 border-b-transparent w-fit hover:border-b-2 hover:border-b-primary">
+              <button
+                onClick={() => dispatch(logout())}
+                className="text-left border-b-2 border-b-transparent w-fit hover:border-b-2 hover:border-b-primary"
+              >
                 Logout
               </button>
             </div>
@@ -176,12 +181,15 @@ const ProfilePopover = ({ role }: { role: string }) => {
           <>
             <div className="flex flex-col gap-2">
               <Link
-                to="/my-booking"
+                to="/dashboard/my-booking"
                 className="border-b-2 border-b-transparent w-fit hover:border-b-2 hover:border-b-primary"
               >
                 My booking
               </Link>
-              <button className="text-left border-b-2 border-b-transparent w-fit hover:border-b-2 hover:border-b-primary">
+              <button
+                onClick={() => dispatch(logout())}
+                className="text-left border-b-2 border-b-transparent w-fit hover:border-b-2 hover:border-b-primary"
+              >
                 Logout
               </button>
             </div>

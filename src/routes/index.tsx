@@ -15,6 +15,10 @@ import RoomDetails from '@/pages/RoomDetails';
 import BookingProcess from '@/pages/BookingProcess';
 import Checkout from '@/pages/Checkout';
 import Payment from '@/pages/Payment';
+import ProtectedRoute from '@/components/layouts/ProtectedRoute';
+import CreateRoom from '@/pages/dashboard/admin/CreateRoom';
+import CreateSlot from '@/pages/dashboard/admin/CreateSlot';
+import MakeAdmin from '@/pages/dashboard/admin/MakeAdmin';
 
 export const router = createBrowserRouter([
   // A) APP LAYOUT ROUTES
@@ -32,7 +36,11 @@ export const router = createBrowserRouter([
       },
       {
         path: 'room-details/:id',
-        element: <RoomDetails />,
+        element: (
+          <ProtectedRoute role="user">
+            <RoomDetails />
+          </ProtectedRoute>
+        ),
       },
       {
         path: 'contact',
@@ -66,16 +74,53 @@ export const router = createBrowserRouter([
       // B1) admin
       {
         path: 'admin',
-        element: <AdminDashboard />,
+        element: (
+          <ProtectedRoute role="admin">
+            <AdminDashboard />
+          </ProtectedRoute>
+        ),
       },
+      {
+        path: 'create-room',
+        element: (
+          <ProtectedRoute role="admin">
+            <CreateRoom />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'create-slot',
+        element: (
+          <ProtectedRoute role="admin">
+            <CreateSlot />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'make-admin',
+        element: (
+          <ProtectedRoute role="admin">
+            <MakeAdmin />
+          </ProtectedRoute>
+        ),
+      },
+
       // B2) user
       {
         path: 'user',
-        element: <UserDashboard />,
+        element: (
+          <ProtectedRoute role="user">
+            <UserDashboard />
+          </ProtectedRoute>
+        ),
       },
       {
         path: 'my-booking',
-        element: <MyBooking />,
+        element: (
+          <ProtectedRoute role="user">
+            <MyBooking />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

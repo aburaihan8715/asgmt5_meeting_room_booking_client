@@ -9,12 +9,10 @@ type TProtectedRoute = {
 };
 
 const ProtectedRoute = ({ children, role }: TProtectedRoute) => {
-  const user = useAppSelector((state) => state.auth.user);
-
-  // const token = useAppSelector(getCurrentToken);
+  const { user } = useAppSelector((state) => state.auth);
   // let user;
   // if (token) {
-  //   user = verifyToken(token);
+  //   user = decodeToken(token);
   // }
 
   const dispatch = useAppDispatch();

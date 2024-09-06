@@ -1,6 +1,12 @@
+export interface IRoom {
+  name: string;
+  roomNo: string;
+  floorNo: string;
+}
+
 export type TSlot = {
   _id: string;
-  room: string;
+  room: IRoom;
   date: string;
   startTime: string;
   endTime: string;

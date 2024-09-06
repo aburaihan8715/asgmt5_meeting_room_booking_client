@@ -9,7 +9,16 @@ const paymentApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
+
+    createPayment: builder.mutation({
+      query: (data) => ({
+        url: '/api/payment/create-payment',
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useCreatePaymentIntentMutation } = paymentApi;
+export const { useCreatePaymentIntentMutation, useCreatePaymentMutation } =
+  paymentApi;
