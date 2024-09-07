@@ -2,6 +2,15 @@ import { baseApi } from '@/redux/api/baseApi';
 
 const roomApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    // CREATE SLOT
+    createSlotIntoDB: builder.mutation({
+      query: (slotData) => ({
+        url: '/api/slots',
+        method: 'POST',
+        body: slotData,
+      }),
+    }),
+
     // GET ALL
     getAllSlots: builder.query({
       query: ({ date, room, page, limit }) => {
@@ -25,4 +34,5 @@ const roomApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetAllSlotsQuery } = roomApi;
+export const { useGetAllSlotsQuery, useCreateSlotIntoDBMutation } =
+  roomApi;
