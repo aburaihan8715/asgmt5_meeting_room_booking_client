@@ -42,16 +42,41 @@ const roomApi = baseApi.injectEndpoints({
           method: 'GET',
         };
       },
+
+      providesTags: ['rooms'],
     }),
 
     // GET ONE
     getRoom: builder.query({
       query: (id) => {
         return {
-          url: `api/rooms/${id}`,
+          url: `/api/rooms/${id}`,
           method: 'GET',
         };
       },
+    }),
+
+    // UPDATE ONE
+    updateRoom: builder.mutation({
+      query: (options) => {
+        return {
+          url: `/api/rooms/${options.id}`,
+          method: 'PUT',
+          body: options.data,
+        };
+      },
+      invalidatesTags: ['rooms'],
+    }),
+
+    // DELETE ONE
+    deleteRoom: builder.mutation({
+      query: (id) => {
+        return {
+          url: `/api/rooms/${id}`,
+          method: 'DELETE',
+        };
+      },
+      invalidatesTags: ['rooms'],
     }),
   }),
 });
@@ -60,4 +85,6 @@ export const {
   useGetAllRoomsQuery,
   useGetRoomQuery,
   useCreateRoomIntoDBMutation,
+  useUpdateRoomMutation,
+  useDeleteRoomMutation,
 } = roomApi;

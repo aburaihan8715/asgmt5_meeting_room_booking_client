@@ -83,10 +83,10 @@ const BookingManagementTable = () => {
     },
 
     {
-      accessorKey: 'room.name',
+      accessorKey: 'room.roomName',
       header: 'Room Name',
       cell: ({ row }) => {
-        const roomName = row.original?.room?.name;
+        const roomName = row.original?.room?.roomName;
         return (
           <div className="capitalize whitespace-nowrap">{roomName}</div>
         );
@@ -141,7 +141,6 @@ const BookingManagementTable = () => {
       header: 'Actions',
       cell: ({ row }) => {
         const id = row.original._id;
-        console.log(id);
         return (
           <div className="flex items-center gap-4">
             <button>

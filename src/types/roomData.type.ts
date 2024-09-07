@@ -1,5 +1,5 @@
 export type TRoom = {
-  _id: number;
+  _id: string;
   roomName: string;
   images: string[];
   coverImage: string;

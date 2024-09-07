@@ -142,7 +142,6 @@ const SlotsManagementTable = () => {
       header: 'Actions',
       cell: ({ row }) => {
         const id = row.original._id;
-        console.log(id);
         return (
           <div className="flex items-center gap-4">
             <button>

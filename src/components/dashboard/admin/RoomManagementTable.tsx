@@ -29,13 +29,17 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { useState } from 'react';
-import { useGetAllRoomsQuery } from '@/redux/features/room/roomApi';
+import {
+  useDeleteRoomMutation,
+  useGetAllRoomsQuery,
+} from '@/redux/features/room/roomApi';
 import { TRoom } from '@/types';
 import { FaRegTrashCan } from 'react-icons/fa6';
-import { FaEdit } from 'react-icons/fa';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { useDebouncedCallback } from 'use-debounce';
 import Pagination from '@/components/ui/Pagination';
+import RoomUpdateModal from './RoomUpdateModal';
+import Swal from 'sweetalert2';
 
 const RoomManagementTable = () => {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -57,11 +61,33 @@ const RoomManagementTable = () => {
       page: currentPage,
       limit: itemsPerPage,
     });
+
+  const [deleteRoom] = useDeleteRoomMutation();
   const rooms: TRoom[] = roomsData?.data || [];
   const meta = roomsData?.meta || {};
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+  };
+  const handleDeleteRoom = async (id: string) => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    });
+
+    if (result.isConfirmed) {
+      await deleteRoom(id);
+      Swal.fire({
+        title: 'Deleted!',
+        text: 'Your room has been deleted.',
+        icon: 'success',
+      });
+    }
   };
 
   const columns: ColumnDef<TRoom>[] = [
@@ -91,11 +117,11 @@ const RoomManagementTable = () => {
     },
 
     {
-      accessorKey: 'name',
+      accessorKey: 'roomName',
       header: 'Room Name',
       cell: ({ row }) => (
         <div className="capitalize whitespace-nowrap">
-          {row.getValue('name')}
+          {row.getValue('roomName')}
         </div>
       ),
     },
@@ -145,13 +171,10 @@ const RoomManagementTable = () => {
       header: 'Actions',
       cell: ({ row }) => {
         const id = row.original._id;
-        console.log(id);
         return (
           <div className="flex items-center gap-4">
-            <button>
-              <FaEdit className="text-xl text-primary" />
-            </button>
-            <button>
+            <RoomUpdateModal id={id} />
+            <button onClick={() => handleDeleteRoom(id)}>
               <FaRegTrashCan className="text-xl text-red-500" />
             </button>
           </div>
