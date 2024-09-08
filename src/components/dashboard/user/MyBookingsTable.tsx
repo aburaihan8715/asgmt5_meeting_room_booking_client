@@ -82,10 +82,10 @@ const MyBookingsTable = () => {
     },
 
     {
-      accessorKey: 'room.name',
+      accessorKey: 'room.roomName',
       header: 'Room Name',
       cell: ({ row }) => {
-        const roomName = row.original?.room?.name;
+        const roomName = row.original?.room?.roomName;
         return (
           <div className="capitalize whitespace-nowrap">{roomName}</div>
         );

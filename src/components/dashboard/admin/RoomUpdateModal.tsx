@@ -95,12 +95,6 @@ const RoomUpdateForm = ({
         images: data.images ? data.images.split(',') : room.images,
       };
 
-      const RData = {
-        id,
-        data: updatedRoomData,
-      };
-      console.log(updatedRoomData);
-      console.log(RData);
       await updateRoom({
         id,
         data: updatedRoomData,

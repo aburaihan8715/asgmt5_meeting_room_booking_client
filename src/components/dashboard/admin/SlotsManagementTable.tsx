@@ -30,12 +30,16 @@ import {
 import { useState } from 'react';
 
 import { FaRegTrashCan } from 'react-icons/fa6';
-import { FaEdit } from 'react-icons/fa';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 import Pagination from '@/components/ui/Pagination';
-import { useGetAllSlotsQuery } from '@/redux/features/slot/slotApi';
+import {
+  useDeleteSlotFromDBMutation,
+  useGetAllSlotsQuery,
+} from '@/redux/features/slot/slotApi';
 import { TSlot } from '@/types/slotData.type';
+import Swal from 'sweetalert2';
+import SlotUpdateModal from './SlotUpdateModal';
 
 const SlotsManagementTable = () => {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -50,11 +54,34 @@ const SlotsManagementTable = () => {
   const { data: slotsData, isLoading: isSlotsLoading } =
     useGetAllSlotsQuery({ page: currentPage, limit: itemsPerPage });
 
+  const [deleteSlotFromDB] = useDeleteSlotFromDBMutation();
+
   const slots: TSlot[] = slotsData?.data || [];
   const meta = slotsData?.meta || {};
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+  };
+
+  const handleDeleteSlot = async (id: string) => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    });
+
+    if (result.isConfirmed) {
+      await deleteSlotFromDB(id);
+      Swal.fire({
+        title: 'Deleted!',
+        text: 'Your slot has been deleted.',
+        icon: 'success',
+      });
+    }
   };
 
   const columns: ColumnDef<TSlot>[] = [
@@ -85,10 +112,10 @@ const SlotsManagementTable = () => {
     },
 
     {
-      accessorKey: 'room.name',
+      accessorKey: 'room.roomName',
       header: 'Room Name',
       cell: ({ row }) => {
-        const roomName = row.original?.room?.name;
+        const roomName = row.original?.room?.roomName;
         return (
           <div className="capitalize whitespace-nowrap">{roomName}</div>
         );
@@ -144,10 +171,9 @@ const SlotsManagementTable = () => {
         const id = row.original._id;
         return (
           <div className="flex items-center gap-4">
-            <button>
-              <FaEdit className="text-xl text-primary" />
-            </button>
-            <button>
+            <SlotUpdateModal id={id} />
+
+            <button onClick={() => handleDeleteSlot(id)}>
               <FaRegTrashCan className="text-xl text-red-500" />
             </button>
           </div>

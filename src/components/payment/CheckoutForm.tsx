@@ -4,6 +4,7 @@ import {
   CardElement,
 } from '@stripe/react-stripe-js';
 import { FormEvent, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { useCreatePaymentIntentMutation } from '@/redux/features/payment/paymentApi';
 import { useAppSelector } from '@/redux/hooks';
@@ -21,6 +22,7 @@ const CheckoutForm = () => {
   const [isCardComplete, setIsCardComplete] = useState(false);
 
   const user = useAppSelector((state) => state.auth.user);
+  const navigate = useNavigate();
   const {
     cost: price,
     date,
@@ -142,6 +144,7 @@ const CheckoutForm = () => {
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Close',
           });
+          navigate(`/dashboard/my-bookings`);
         }
       }
     } catch (error) {

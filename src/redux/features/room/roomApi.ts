@@ -9,6 +9,7 @@ const roomApi = baseApi.injectEndpoints({
         method: 'POST',
         body: roomData,
       }),
+      invalidatesTags: ['rooms'],
     }),
 
     // GET ALL

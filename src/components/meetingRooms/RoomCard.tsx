@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 
 interface RoomCardProps {
   room: {
-    _id: number;
-    name: string;
+    _id: string;
+    roomName: string;
     coverImage: string;
     images: string[];
     capacity: number;
@@ -19,7 +19,7 @@ const RoomCard = ({ room }: RoomCardProps) => {
     <div className="relative overflow-hidden bg-white rounded-lg shadow-md group">
       <img
         src={room.coverImage}
-        alt={room.name}
+        alt={room.roomName}
         className="object-cover w-full h-40 rounded"
       />
 
@@ -34,7 +34,7 @@ const RoomCard = ({ room }: RoomCardProps) => {
 
       <div className="p-4">
         <h3 className="mb-2 text-xl font-semibold text-gray-800">
-          {room.name}
+          {room.roomName}
         </h3>
         <p className="mb-1 text-sm text-gray-600">
           Capacity: {room.capacity} people

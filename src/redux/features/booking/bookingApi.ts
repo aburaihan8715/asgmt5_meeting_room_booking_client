@@ -9,6 +9,7 @@ const bookingApi = baseApi.injectEndpoints({
         method: 'POST',
         body: data,
       }),
+      invalidatesTags: ['bookings'],
     }),
 
     // GET MY BOOKINGS
@@ -47,6 +48,7 @@ const bookingApi = baseApi.injectEndpoints({
           method: 'GET',
         };
       },
+      providesTags: ['bookings'],
     }),
   }),
 });

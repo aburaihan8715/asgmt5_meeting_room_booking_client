@@ -1,6 +1,6 @@
 import { baseApi } from '@/redux/api/baseApi';
 
-const roomApi = baseApi.injectEndpoints({
+const slotApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // CREATE SLOT
     createSlotIntoDB: builder.mutation({
@@ -9,6 +9,7 @@ const roomApi = baseApi.injectEndpoints({
         method: 'POST',
         body: slotData,
       }),
+      invalidatesTags: ['slots'],
     }),
 
     // GET ALL
@@ -30,9 +31,49 @@ const roomApi = baseApi.injectEndpoints({
           method: 'GET',
         };
       },
+
+      providesTags: ['slots'],
+    }),
+
+    // GET ONE
+    getSlotFromDB: builder.query({
+      query: (id) => {
+        return {
+          url: `/api/slots/${id}`,
+          method: 'GET',
+        };
+      },
+    }),
+
+    // UPDATE ONE
+    updateSlotIntoDB: builder.mutation({
+      query: (options) => {
+        return {
+          url: `/api/slots/${options.id}`,
+          method: 'PUT',
+          body: options.data,
+        };
+      },
+      invalidatesTags: ['slots'],
+    }),
+
+    // DELETE ONE
+    deleteSlotFromDB: builder.mutation({
+      query: (id) => {
+        return {
+          url: `/api/slots/${id}`,
+          method: 'DELETE',
+        };
+      },
+      invalidatesTags: ['slots'],
     }),
   }),
 });
 
-export const { useGetAllSlotsQuery, useCreateSlotIntoDBMutation } =
-  roomApi;
+export const {
+  useGetAllSlotsQuery,
+  useCreateSlotIntoDBMutation,
+  useDeleteSlotFromDBMutation,
+  useUpdateSlotIntoDBMutation,
+  useGetSlotFromDBQuery,
+} = slotApi;

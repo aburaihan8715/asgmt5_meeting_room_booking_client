@@ -8,6 +8,7 @@ const userApi = baseApi.injectEndpoints({
         method: 'POST',
         body: registerData,
       }),
+      invalidatesTags: ['users'],
     }),
 
     // GET ALL USERS
@@ -28,6 +29,7 @@ const userApi = baseApi.injectEndpoints({
           method: 'GET',
         };
       },
+      providesTags: ['users'],
     }),
   }),
 });

@@ -67,6 +67,15 @@ const Sidebar = () => {
           <li className="flex">
             <ActiveLink
               className="flex items-center gap-2"
+              to="/dashboard/user"
+            >
+              <FaHome className="text-2xl md:text-base" />
+              <span className="hidden md:block">User Home</span>
+            </ActiveLink>
+          </li>
+          <li className="flex">
+            <ActiveLink
+              className="flex items-center gap-2"
               to="/dashboard/my-bookings"
             >
               <FaPlusSquare className="text-2xl md:text-base" />
