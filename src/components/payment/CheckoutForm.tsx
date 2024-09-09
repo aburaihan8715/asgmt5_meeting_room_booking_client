@@ -10,6 +10,7 @@ import { useCreatePaymentIntentMutation } from '@/redux/features/payment/payment
 import { useAppSelector } from '@/redux/hooks';
 import { Button } from '../ui/button';
 import Swal from 'sweetalert2';
+import { useGetMyBookingsFromDBQuery } from '@/redux/features/booking/bookingApi';
 
 const CheckoutForm = () => {
   const stripe = useStripe();
@@ -20,6 +21,8 @@ const CheckoutForm = () => {
   const [cardError, setCardError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isCardComplete, setIsCardComplete] = useState(false);
+
+  const { refetch } = useGetMyBookingsFromDBQuery({});
 
   const user = useAppSelector((state) => state.auth.user);
   const navigate = useNavigate();
@@ -146,6 +149,7 @@ const CheckoutForm = () => {
           });
           navigate(`/dashboard/my-bookings`);
         }
+        refetch();
       }
     } catch (error) {
       console.error('Payment Error:', error);

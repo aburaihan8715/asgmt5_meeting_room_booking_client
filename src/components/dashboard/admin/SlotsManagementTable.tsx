@@ -40,6 +40,13 @@ import {
 import { TSlot } from '@/types/slotData.type';
 import Swal from 'sweetalert2';
 import SlotUpdateModal from './SlotUpdateModal';
+import { useGetAllRoomsQuery } from '@/redux/features/room/roomApi';
+import { TRoom } from '@/types';
+
+export type TRoomOptions = {
+  label: string;
+  value: string;
+};
 
 const SlotsManagementTable = () => {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -47,17 +54,44 @@ const SlotsManagementTable = () => {
   const [columnVisibility, setColumnVisibility] =
     useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [filterByRoom, setFilterByRoom] = useState('');
+  const [filterByDate, setFilterByDate] = useState('');
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 5;
 
-  const { data: slotsData, isLoading: isSlotsLoading } =
-    useGetAllSlotsQuery({ page: currentPage, limit: itemsPerPage });
+  const { data: datesData, isLoading: isDatesLoading } =
+    useGetAllSlotsQuery({});
 
+  const uniqueDates = [
+    ...new Set(datesData?.data?.map((item: TSlot) => item.date)),
+  ];
+
+  const { data: slotsData, isLoading: isSlotsLoading } =
+    useGetAllSlotsQuery({
+      page: currentPage,
+      limit: itemsPerPage,
+      filterByRoom,
+      filterByDate,
+    });
+
+  const { data: roomsData, isLoading: isRoomsLoading } =
+    useGetAllRoomsQuery({});
+
+  const roomsOptions: TRoomOptions[] = roomsData?.data.map(
+    (item: TRoom) => {
+      return {
+        label: item?.roomName,
+        value: item?._id,
+      };
+    }
+  );
   const [deleteSlotFromDB] = useDeleteSlotFromDBMutation();
 
   const slots: TSlot[] = slotsData?.data || [];
   const meta = slotsData?.meta || {};
+
+  const dateOptions = uniqueDates?.map((date) => date as string);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -198,37 +232,70 @@ const SlotsManagementTable = () => {
     },
   });
 
-  if (isSlotsLoading) return <LoadingSpinner />;
+  if (isSlotsLoading || isRoomsLoading || isDatesLoading)
+    return <LoadingSpinner />;
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDownIcon className="w-4 h-4 ml-2" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <div className="flex flex-col items-center gap-4 md:w-3/4 md:flex-row md:py-4">
+        <div className="flex-1 w-full">
+          <select
+            onChange={(e) => setFilterByRoom(e.target.value)}
+            className="w-full px-3 py-2 border rounded outline-none "
+          >
+            <option value="">Filter by room name</option>
+            {roomsOptions?.map((item) => (
+              <option key={item.value} value={item.value}>
+                {item.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="flex-1 w-full">
+          <select
+            onChange={(e) => setFilterByDate(e.target.value)}
+            className="w-full px-3 py-2 border rounded outline-none "
+          >
+            <option value="">Filter by date</option>
+            {dateOptions?.map((date) => (
+              <option key={date} value={date}>
+                {date}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex-1 w-full">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="py-[21px] w-full flex justify-between"
+              >
+                Columns <ChevronDownIcon className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
 
       <div className="border rounded-md">

@@ -29,6 +29,7 @@ const bookingApi = baseApi.injectEndpoints({
           method: 'GET',
         };
       },
+      providesTags: ['bookings'],
     }),
 
     // GET ALL BOOKINGS

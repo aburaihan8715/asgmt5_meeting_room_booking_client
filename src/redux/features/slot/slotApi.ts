@@ -14,15 +14,16 @@ const slotApi = baseApi.injectEndpoints({
 
     // GET ALL
     getAllSlots: builder.query({
-      query: ({ date, room, page, limit }) => {
+      query: ({ page, limit, filterByRoom, filterByDate, fields }) => {
         let queryString = `/api/slots/availability`;
 
         const params = new URLSearchParams();
 
-        if (date) params.append('date', date);
-        if (room) params.append('room', room);
+        if (filterByDate) params.append('date', filterByDate);
+        if (filterByRoom) params.append('room', filterByRoom);
         if (page) params.append('page', page);
         if (limit) params.append('limit', limit);
+        if (fields) params.append('fields', fields);
 
         if (params.toString()) queryString += `?${params.toString()}`;
 

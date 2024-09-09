@@ -16,6 +16,7 @@ const paymentApi = baseApi.injectEndpoints({
         method: 'POST',
         body: data,
       }),
+      invalidatesTags: ['payment', 'bookings'],
     }),
   }),
 });
