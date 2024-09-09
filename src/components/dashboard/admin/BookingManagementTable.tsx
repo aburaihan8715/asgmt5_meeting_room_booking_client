@@ -31,9 +31,15 @@ import { useState } from 'react';
 
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Pagination from '@/components/ui/Pagination';
-import { useGetAllBookingsQuery } from '@/redux/features/booking/bookingApi';
+import {
+  useDeleteBookingFromDBMutation,
+  useGetAllBookingsQuery,
+  useUpdateBookingConfirmedIntoDBMutation,
+} from '@/redux/features/booking/bookingApi';
 import { TBooking } from '@/types/bookingData.type';
 import { Badge } from '@/components/ui/badge';
+import Swal from 'sweetalert2';
+import { toast } from 'sonner';
 
 const BookingManagementTable = () => {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -44,6 +50,9 @@ const BookingManagementTable = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 5;
 
+  const [deleteBookingFromDB] = useDeleteBookingFromDBMutation();
+  const [updateBookingConfirmedIntoDB] =
+    useUpdateBookingConfirmedIntoDBMutation();
   const { data: bookingsData, isLoading: isBookingsLoading } =
     useGetAllBookingsQuery({
       page: currentPage,
@@ -54,6 +63,42 @@ const BookingManagementTable = () => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+  };
+
+  const handleApprove = async (id: string) => {
+    const toastId = toast.loading('loading...');
+    try {
+      await updateBookingConfirmedIntoDB({
+        id,
+        data: { isConfirmed: 'confirmed' },
+      });
+      toast.success('Booking approved!', { id: toastId, duration: 2000 });
+    } catch (error) {
+      console.log(error);
+      toast.error('Something went wrong', { id: toastId, duration: 2000 });
+    }
+  };
+
+  const handleDeleteBooking = async (id: string) => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    });
+
+    if (result.isConfirmed) {
+      console.log(id);
+      await deleteBookingFromDB(id);
+      Swal.fire({
+        title: 'Deleted!',
+        text: 'Your slot has been deleted.',
+        icon: 'success',
+      });
+    }
   };
 
   const columns: ColumnDef<TBooking>[] = [
@@ -140,13 +185,29 @@ const BookingManagementTable = () => {
       id: 'actions',
       header: 'Actions',
       cell: ({ row }) => {
-        const id = row.original._id;
+        const booking = row.original;
         return (
           <div className="flex items-center gap-4">
-            <button>
+            <button
+              disabled={booking?.isConfirmed === 'confirmed'}
+              onClick={() => handleApprove(booking?._id)}
+              className={`${
+                booking?.isConfirmed === 'confirmed'
+                  ? 'cursor-not-allowed'
+                  : ''
+              }`}
+            >
               <Badge variant="default">Approve</Badge>
             </button>
-            <button>
+            <button
+              disabled={booking?.isConfirmed === 'confirmed'}
+              onClick={() => handleDeleteBooking(booking?._id)}
+              className={`${
+                booking?.isConfirmed === 'confirmed'
+                  ? 'cursor-not-allowed'
+                  : ''
+              }`}
+            >
               <Badge variant="destructive">Delete</Badge>
             </button>
           </div>

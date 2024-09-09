@@ -51,6 +51,39 @@ const bookingApi = baseApi.injectEndpoints({
       },
       providesTags: ['bookings'],
     }),
+
+    // GET ONE
+    getBookingFromDB: builder.query({
+      query: (id) => {
+        return {
+          url: `/api/bookings/${id}`,
+          method: 'GET',
+        };
+      },
+    }),
+
+    // UPDATE UNCONFIRMED
+    updateBookingConfirmedIntoDB: builder.mutation({
+      query: (options) => {
+        return {
+          url: `/api/bookings/${options.id}`,
+          method: 'PATCH',
+          body: options.data,
+        };
+      },
+      invalidatesTags: ['bookings'],
+    }),
+
+    // DELETE ONE
+    deleteBookingFromDB: builder.mutation({
+      query: (id) => {
+        return {
+          url: `/api/bookings/${id}`,
+          method: 'DELETE',
+        };
+      },
+      invalidatesTags: ['bookings'],
+    }),
   }),
 });
 
@@ -58,4 +91,7 @@ export const {
   useGetAllBookingsQuery,
   useCreateBookingIntoDBMutation,
   useGetMyBookingsFromDBQuery,
+  useDeleteBookingFromDBMutation,
+  useUpdateBookingConfirmedIntoDBMutation,
+  useGetBookingFromDBQuery,
 } = bookingApi;
