@@ -33,8 +33,12 @@ import { useState } from 'react';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { useDebouncedCallback } from 'use-debounce';
 import Pagination from '@/components/ui/Pagination';
-import { useGetAllUsersQuery } from '@/redux/features/user/userApi';
+import {
+  useGetAllUsersQuery,
+  useMakeAdminIntoDBMutation,
+} from '@/redux/features/user/userApi';
 import { TUser } from '@/types/userData.type';
+import { toast } from 'sonner';
 
 const MakeAdminTable = () => {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -46,6 +50,8 @@ const MakeAdminTable = () => {
   const searchDebounce = useDebouncedCallback((value) => {
     setSearchQuery(value);
   }, 1000);
+
+  const [makeAdminIntoDB] = useMakeAdminIntoDBMutation();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 5;
@@ -61,6 +67,19 @@ const MakeAdminTable = () => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+  };
+  const handleMakeAdmin = async (user: TUser) => {
+    const toastId = toast.loading('loading...');
+    try {
+      await makeAdminIntoDB({ _id: user._id });
+      toast.success('Making admin success!', {
+        id: toastId,
+        duration: 2000,
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error('Something went wrong', { id: toastId, duration: 2000 });
+    }
   };
 
   const columns: ColumnDef<TUser>[] = [
@@ -119,11 +138,21 @@ const MakeAdminTable = () => {
       id: 'actions',
       header: 'Actions',
       cell: ({ row }) => {
-        const role = row.original.role;
+        const user = row.original;
 
         return (
           <div className="flex items-center gap-4">
-            <Button disabled={role === 'admin'}>Make Admin</Button>
+            <button
+              disabled={user?.role === 'admin'}
+              onClick={() => handleMakeAdmin(user)}
+              className={`${
+                user?.role === 'admin'
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-blue-500 text-white hover:bg-blue-700'
+              } px-4 py-2 rounded transition-colors`}
+            >
+              Make Admin
+            </button>
           </div>
         );
       },
@@ -157,7 +186,7 @@ const MakeAdminTable = () => {
           name="search"
           id="search"
           onChange={(e) => searchDebounce(e.target.value)}
-          placeholder="Search by room name..."
+          placeholder="Search by name..."
           className="max-w-sm"
         />
 

@@ -2,6 +2,7 @@ import { baseApi } from '@/redux/api/baseApi';
 
 const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    // CREATE USER
     userRegister: builder.mutation({
       query: (registerData) => ({
         url: '/api/users/register',
@@ -31,7 +32,23 @@ const userApi = baseApi.injectEndpoints({
       },
       providesTags: ['users'],
     }),
+
+    // UPDATE ROLE
+    makeAdminIntoDB: builder.mutation({
+      query: (data) => {
+        return {
+          url: `/api/users/make-admin`,
+          method: 'PATCH',
+          body: data,
+        };
+      },
+      invalidatesTags: ['users'],
+    }),
   }),
 });
 
-export const { useUserRegisterMutation, useGetAllUsersQuery } = userApi;
+export const {
+  useUserRegisterMutation,
+  useGetAllUsersQuery,
+  useMakeAdminIntoDBMutation,
+} = userApi;
