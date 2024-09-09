@@ -172,7 +172,6 @@ const BookingProcess: React.FC = () => {
         </div>
 
         {/* CHECKOUT BUTTON */}
-
         <div className="flex justify-end p-6 border-t sm:p-10">
           <Button
             disabled={!selectedDate || selectedSlots.length < 1}

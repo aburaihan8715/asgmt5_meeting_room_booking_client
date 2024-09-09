@@ -164,7 +164,7 @@ const ProfilePopover = ({ role }: { role: string }) => {
           <>
             <div className="flex flex-col gap-2">
               <Link
-                to="/dashboard"
+                to="/dashboard/admin"
                 className="border-b-2 border-b-transparent w-fit hover:border-b-2 hover:border-b-primary"
               >
                 Dashboard
