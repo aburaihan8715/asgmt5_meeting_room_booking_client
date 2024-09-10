@@ -16,7 +16,7 @@ import { useGetRoomQuery } from '@/redux/features/room/roomApi';
 import { useCreateBookingIntoDBMutation } from '@/redux/features/booking/bookingApi';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 
-const BookingProcess: React.FC = () => {
+const BookingProcess = () => {
   const { roomId } = useParams();
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
