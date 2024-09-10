@@ -72,7 +72,7 @@ const BookingProcess = () => {
       slots: selectedSlots.map((item) => item?.value),
       slotTime: selectedSlots.map((item) => item?.label),
       room: roomId,
-      roomName: roomData?.data?.name,
+      roomName: roomData?.data?.roomName,
       user: user?._id,
       cost: roomData?.data?.pricePerSlot * selectedSlots?.length,
     };
