@@ -2,9 +2,10 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store';
 
 const baseQuery = fetchBaseQuery({
-  // NOTE: use the local url when run locally
-  // baseUrl: 'http://localhost:5000',
-  baseUrl: 'https://meeting-room-booking-sepia.vercel.app',
+  baseUrl:
+    process.env.NODE_ENV === 'production'
+      ? import.meta.env.VITE_BASE_URL
+      : 'http://localhost:5000',
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
