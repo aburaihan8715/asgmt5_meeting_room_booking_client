@@ -55,24 +55,15 @@ const SlotsManagementTable = () => {
     useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [filterByRoom, setFilterByRoom] = useState('');
-  const [filterByDate, setFilterByDate] = useState('');
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 5;
-
-  const { data: datesData, isLoading: isDatesLoading } =
-    useGetAllSlotsQuery({});
-
-  const uniqueDates = [
-    ...new Set(datesData?.data?.map((item: TSlot) => item.date)),
-  ];
 
   const { data: slotsData, isLoading: isSlotsLoading } =
     useGetAllSlotsQuery({
       page: currentPage,
       limit: itemsPerPage,
       filterByRoom,
-      filterByDate,
     });
 
   const { data: roomsData, isLoading: isRoomsLoading } =
@@ -90,8 +81,6 @@ const SlotsManagementTable = () => {
 
   const slots: TSlot[] = slotsData?.data || [];
   const meta = slotsData?.meta || {};
-
-  const dateOptions = uniqueDates?.map((date) => date as string);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -232,8 +221,7 @@ const SlotsManagementTable = () => {
     },
   });
 
-  if (isSlotsLoading || isRoomsLoading || isDatesLoading)
-    return <LoadingSpinner />;
+  if (isSlotsLoading || isRoomsLoading) return <LoadingSpinner />;
 
   return (
     <div className="w-full">
@@ -251,7 +239,7 @@ const SlotsManagementTable = () => {
             ))}
           </select>
         </div>
-        <div className="flex-1 w-full">
+        {/* <div className="flex-1 w-full">
           <select
             onChange={(e) => setFilterByDate(e.target.value)}
             className="w-full px-3 py-2 border rounded outline-none "
@@ -263,7 +251,7 @@ const SlotsManagementTable = () => {
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
 
         <div className="flex-1 w-full">
           <DropdownMenu>
