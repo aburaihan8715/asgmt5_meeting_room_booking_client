@@ -35,9 +35,19 @@ export const bookingSlice = createSlice({
       state.user = user;
       state.cost = cost;
     },
+
+    clearBooking: (state) => {
+      state.date = '';
+      state.room = '';
+      state.roomName = '';
+      state.slots = [];
+      state.slotTime = [];
+      state.user = '';
+      state.cost = 0;
+    },
   },
 });
 
-export const { createBooking } = bookingSlice.actions;
+export const { createBooking, clearBooking } = bookingSlice.actions;
 
 export default bookingSlice.reducer;

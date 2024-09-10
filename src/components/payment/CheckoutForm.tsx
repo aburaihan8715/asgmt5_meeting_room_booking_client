@@ -7,10 +7,11 @@ import { FormEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useCreatePaymentIntentMutation } from '@/redux/features/payment/paymentApi';
-import { useAppSelector } from '@/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { Button } from '../ui/button';
 import Swal from 'sweetalert2';
 import { useGetMyBookingsFromDBQuery } from '@/redux/features/booking/bookingApi';
+import { clearBooking } from '@/redux/features/booking/bookingSlice';
 
 const CheckoutForm = () => {
   const stripe = useStripe();
@@ -25,6 +26,7 @@ const CheckoutForm = () => {
   const { refetch } = useGetMyBookingsFromDBQuery({});
 
   const user = useAppSelector((state) => state.auth.user);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const {
     cost: price,
@@ -109,8 +111,6 @@ const CheckoutForm = () => {
           slots: slots,
         };
 
-        console.log(paymentInfo);
-
         // 01 info alert
         const result = await Swal.fire({
           title: 'Confirm Payment Details',
@@ -147,6 +147,8 @@ const CheckoutForm = () => {
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Close',
           });
+          // clear the booking from redux
+          dispatch(clearBooking());
           navigate(`/dashboard/my-bookings`);
         }
         refetch();
