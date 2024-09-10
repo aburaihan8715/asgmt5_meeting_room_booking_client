@@ -181,7 +181,7 @@ const ProfilePopover = ({ role }: { role: string }) => {
           <>
             <div className="flex flex-col gap-2">
               <Link
-                to="/dashboard/my-booking"
+                to="/dashboard/my-bookings"
                 className="border-b-2 border-b-transparent w-fit hover:border-b-2 hover:border-b-primary"
               >
                 My booking
