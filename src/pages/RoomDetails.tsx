@@ -49,7 +49,7 @@ const RoomDetailsPage: React.FC = () => {
           {/* ROOM DETAILS */}
           <div className="p-6 sm:p-8">
             <h1 className="text-2xl font-bold text-gray-800">
-              {roomData.name}
+              {roomData.roomName}
             </h1>
             <p className="mt-2 text-sm text-gray-600">
               Room No: {roomData.roomNo} | Floor: {roomData.floorNo}
