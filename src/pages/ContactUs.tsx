@@ -49,7 +49,7 @@ const ContactUs = () => {
 
       {/* Contact Form Section */}
       <section className="py-20 bg-gray-100">
-        <div className="px-6 mx-auto max-w-7xl lg:px-8">
+        <div className="mx-auto md:px-6 max-w-7xl lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}

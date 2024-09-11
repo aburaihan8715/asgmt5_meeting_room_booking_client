@@ -237,10 +237,13 @@ const BookingManagementTable = () => {
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex items-center py-4 md:max-w-sm">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <Button
+              variant="outline"
+              className="py-[21px] w-full flex justify-between"
+            >
               Columns <ChevronDownIcon className="w-4 h-4 ml-2" />
             </Button>
           </DropdownMenuTrigger>

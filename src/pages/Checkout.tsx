@@ -29,7 +29,7 @@ const Checkout = () => {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-8 bg-gray-50">
+    <div className="flex items-center justify-center min-h-screen md:p-8 p-1 bg-gray-50">
       <div className="w-full max-w-4xl p-6 bg-white rounded-lg shadow-lg">
         <h1 className="mb-4 text-2xl font-bold text-gray-800">
           Booking Summary
@@ -70,7 +70,7 @@ const Checkout = () => {
           <h2 className="mb-2 text-xl font-semibold text-gray-800">
             Select Payment Method
           </h2>
-          <div className="flex gap-4">
+          <div className="flex gap-4 flex-wrap">
             {paymentOptions.map((option) => (
               <button
                 key={option}

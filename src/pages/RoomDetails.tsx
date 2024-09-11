@@ -21,14 +21,14 @@ const RoomDetailsPage: React.FC = () => {
   }
 
   return (
-    <section className="px-10 py-10 md:py-20">
+    <section className="md:px-10 px-1 py-10 md:py-20">
       <div className="flex justify-center">
         <SectionHeading heading="Room Details" />
       </div>
       <div className="min-h-screen">
-        <div className="p-10 overflow-hidden border rounded-lg shadow-lg">
+        <div className="md:p-10 p-1 overflow-hidden border rounded-lg shadow-lg">
           {/* IMAGE */}
-          <div className="flex gap-4">
+          <div className="flex flex-col md:flex-row gap-4">
             {roomData?.images.slice(0, 2).map((image, index) => (
               <motion.div
                 key={index}

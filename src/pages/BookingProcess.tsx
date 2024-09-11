@@ -98,7 +98,7 @@ const BookingProcess = () => {
   return (
     <section className="min-h-screen">
       <div className="overflow-hidden rounded-lg shadow-lg">
-        <div className="flex">
+        <div className="flex flex-col md:flex-row">
           {/* DATE SELECTION */}
           <div className="p-6 sm:p-10">
             <h2 className="mb-4 text-xl font-semibold text-gray-800">

@@ -25,11 +25,11 @@ const AdminDashboard = () => {
           <SectionHeading heading="Admin Dashboard" />
         </div>
         <div className="space-y-20">
-          <div className="p-5 pb-10 rounded-md shadow-lg">
-            <div className="flex justify-between">
-              <h3 className="text-xl font-medium">Room Management</h3>
+          <div className="p-1 pb-10 rounded-md shadow-lg md:p-5">
+            <div className="flex flex-col gap-4 md:flex-row md:justify-between">
+              <h3 className="font-medium md:text-xl">Room Management</h3>
               <Link to={`/dashboard/create-room`}>
-                <Button>Create Room</Button>
+                <Button className="w-full md:w-auto">Create Room</Button>
               </Link>
             </div>
             <div>
@@ -37,11 +37,11 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          <div className="p-5 py-10 rounded-md shadow-lg">
-            <div className="flex justify-between">
-              <h3 className="text-xl font-medium">Slot Management</h3>
+          <div className="p-1 py-10 space-y-2 rounded-md shadow-lg md:p-5">
+            <div className="flex flex-col gap-4 md:justify-between md:flex-row">
+              <h3 className="font-medium md:text-xl">Slot Management</h3>
               <Link to={`/dashboard/create-slot`}>
-                <Button>Create Slot</Button>
+                <Button className="w-full md:w-auto">Create Slot</Button>
               </Link>
             </div>
             <div>
@@ -49,9 +49,11 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          <div className="p-5 py-10 rounded-md shadow-lg">
+          <div className="p-1 py-10 rounded-md shadow-lg md:p-5">
             <div className="flex justify-between">
-              <h3 className="text-xl font-medium">Booking Management</h3>
+              <h3 className="font-medium md:text-xl">
+                Booking Management
+              </h3>
             </div>
             <div>
               <BookingManagementTable />

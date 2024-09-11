@@ -224,8 +224,8 @@ const SlotsManagementTable = () => {
   if (isSlotsLoading || isRoomsLoading) return <LoadingSpinner />;
 
   return (
-    <div className="w-full">
-      <div className="flex flex-col items-center gap-4 md:w-3/4 md:flex-row md:py-4">
+    <div className="w-full space-y-2">
+      <div className="flex flex-col items-center gap-4 md:flex-row md:py-4">
         <div className="flex-1 w-full">
           <select
             onChange={(e) => setFilterByRoom(e.target.value)}

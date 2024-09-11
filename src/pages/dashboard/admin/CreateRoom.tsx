@@ -62,7 +62,7 @@ const CreateRoom = () => {
         <SectionHeading heading="Create Room" />
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="md:px-20 px-1 space-y-5">
+        <div className="lg:px-20 px-1 space-y-5">
           <div className="grid md:grid-cols-2 grid-cols-1 gap-x-10 gap-y-5">
             {/* Room Name */}
             <div className="flex flex-col gap-2">

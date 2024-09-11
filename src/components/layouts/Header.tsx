@@ -54,7 +54,7 @@ const Header = () => {
   return (
     <header>
       {/* DESKTOP NAV */}
-      <div className="md:flex hidden bg-orange-50 justify-between h-[80px] items-center px-10 fixed top-0 w-full z-20">
+      <div className="lg:flex hidden bg-orange-50 justify-between h-[80px] items-center px-10 fixed top-0 w-full z-20">
         {/* LOGO */}
         <Link to="/">
           <BrandLogo />
@@ -90,7 +90,7 @@ const Header = () => {
       </div>
 
       {/* MOBILE NAV */}
-      <div className="md:hidden">
+      <div className="lg:hidden">
         <div className="flex px-2 bg-[#e9effd] h-[80px] items-center justify-between fixed top-0 w-full z-20">
           <div onClick={() => setOpen(!open)} className="">
             {open && (

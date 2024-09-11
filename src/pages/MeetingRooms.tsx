@@ -67,7 +67,7 @@ const MeetingRoomsPage = () => {
 
   return (
     <Suspense fallback={<LoadingSpinner />}>
-      <section className="px-10 py-10 md:py-20">
+      <section className="px-1 py-10 md:px-10 md:py-20">
         <div className="flex justify-center">
           <SectionHeading heading="Meeting Rooms" />
         </div>

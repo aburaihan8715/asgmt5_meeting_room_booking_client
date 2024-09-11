@@ -86,7 +86,7 @@ const CreateSlot = () => {
         <SectionHeading heading="Create Slot" />
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="px-1 space-y-5 md:px-20">
+        <div className="px-1 space-y-5 lg:px-20">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-5">
             {/* Room Dropdown */}
             <div className="flex flex-col gap-2">
