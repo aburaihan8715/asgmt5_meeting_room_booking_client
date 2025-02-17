@@ -21,6 +21,7 @@ type LoginFormData = z.infer<typeof schema>;
 const Login: React.FC = () => {
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormData>({
@@ -54,6 +55,16 @@ const Login: React.FC = () => {
     }
   };
 
+  const handleCredentials = (role: string) => {
+    if (role === 'admin') {
+      setValue('email', 'admin@gmail.com');
+      setValue('password', 'test1234');
+    } else if (role === 'user') {
+      setValue('email', 'user@gmail.com');
+      setValue('password', 'test1234');
+    }
+  };
+
   if (user) {
     return <Navigate to={`/dashboard/${user.role}`} replace={true} />;
   }
@@ -69,6 +80,21 @@ const Login: React.FC = () => {
         <div className="flex justify-center mb-6">
           <SectionHeading heading="Login" />
         </div>
+        <div className="flex flex-wrap justify-center gap-2 mb-2">
+          <button
+            onClick={() => handleCredentials('admin')}
+            className="px-2 py-1 text-gray-200 transition duration-300 bg-green-600 rounded-md"
+          >
+            admin credentials
+          </button>
+          <button
+            onClick={() => handleCredentials('user')}
+            className="px-2 py-1 text-gray-200 transition duration-300 bg-green-600 rounded-md"
+          >
+            user credentials
+          </button>
+        </div>
+
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4">
             <motion.div
