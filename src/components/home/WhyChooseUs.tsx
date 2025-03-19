@@ -1,5 +1,5 @@
 import { whyChooseUsData } from '@/data/whyChooseUsData';
-import SectionHeading from '../ui/SectionHeading';
+import SectionHeading from '../common/SectionHeading';
 
 interface FeatureCardProps {
   icon: React.ReactNode;

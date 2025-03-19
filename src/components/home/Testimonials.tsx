@@ -7,7 +7,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 import { reviews } from '@/data/customerReviewData';
-import SectionHeading from '../ui/SectionHeading';
+import SectionHeading from '../common/SectionHeading';
 
 import testimonialsBg from '@/assets/images/testimonials_bg.jpg';
 

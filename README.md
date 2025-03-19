@@ -40,7 +40,7 @@ https://drive.google.com/file/d/1A5n_xxlednlUpT23j9LRVMOmHfEJ5lMQ/view?usp=shari
 
 ## Packages used:
 
-1. framer-motion
+1. motion
 2. react-hook-form
 3. zod
 4. redux and redux-toolkit

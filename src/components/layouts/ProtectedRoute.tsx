@@ -24,7 +24,7 @@ const ProtectedRoute = ({ children, role }: TProtectedRoute) => {
   }
 
   if (isUnauthorized) {
-    return <Navigate to="/login" replace={true} />;
+    return <Navigate to="/unauth" replace={true} />;
   }
 
   return children;

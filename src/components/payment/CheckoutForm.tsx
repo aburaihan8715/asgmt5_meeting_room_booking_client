@@ -4,7 +4,7 @@ import {
   CardElement,
 } from '@stripe/react-stripe-js';
 import { FormEvent, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { useCreatePaymentIntentMutation } from '@/redux/features/payment/paymentApi';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
@@ -111,31 +111,30 @@ const CheckoutForm = () => {
           slots: slots,
         };
 
-        // 01 info alert
         const result = await Swal.fire({
-          title: 'Confirm Payment Details',
+          title:
+            '<h2 style="color: #2D3748; font-weight: 600;">Confirm Payment Details</h2>',
           html: `
-              <div style="display: flex; flex-direction: column;">
-                <p style="font-weight: bold; color: #1a202c;">Email: ${
-                  paymentInfo.userEmail
-                }</p>
-                <p style="font-weight: bold; color: #1a202c;">Transaction ID: ${
-                  paymentInfo.transactionId
-                }</p>
-                <p style="font-weight: bold; color: #1a202c;">Price: $${
-                  paymentInfo.price
-                }</p>
-                <p style="font-weight: bold; color: #1a202c;">Date: ${
-                  paymentInfo.date
-                }</p>
-                <p style="font-weight: bold; color: #1a202c;">Slots: ${slotTime.join(
-                  ', '
-                )}</p>
-              </div>
-              `,
+            <div style="
+              display: flex; 
+              flex-direction: column; 
+              gap: 10px; 
+              text-align: left; 
+              font-size: 16px; 
+              color: #4A5568;
+            ">
+              <p><strong>📧 Email:</strong> ${paymentInfo.userEmail}</p>
+              <p><strong>💳 Transaction ID:</strong> ${
+                paymentInfo.transactionId
+              }</p>
+              <p><strong>💲 Price:</strong> $${paymentInfo.price}</p>
+              <p><strong>📅 Date:</strong> ${paymentInfo.date}</p>
+              <p><strong>⏳ Slots:</strong> ${slotTime.join(', ')}</p>
+            </div>
+          `,
           icon: 'info',
           confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Confirm',
+          confirmButtonText: 'Ok',
         });
 
         // 02 thank you alert
@@ -149,7 +148,7 @@ const CheckoutForm = () => {
           });
           // clear the booking from redux
           dispatch(clearBooking());
-          navigate(`/dashboard/my-bookings`);
+          navigate(`/user/my-bookings`);
         }
         refetch();
       }
@@ -212,6 +211,16 @@ const CheckoutForm = () => {
           Transaction complete with transaction ID: {transactionId}
         </p>
       )}
+
+      {/* Back rooms */}
+      <div className="mt-4 text-center">
+        <Link
+          to="/rooms"
+          className="text-sm text-gray-600 hover:text-green-500"
+        >
+          Back to rooms
+        </Link>
+      </div>
     </>
   );
 };

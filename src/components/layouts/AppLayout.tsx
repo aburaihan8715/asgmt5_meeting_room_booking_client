@@ -1,7 +1,7 @@
+import { Outlet } from 'react-router';
 import Header from './Header';
-import { Outlet } from 'react-router-dom';
 import Footer from './Footer';
-import ScrollToTop from 'react-scroll-to-top';
+import ScrollTop from '../common/ScrollToTop';
 
 const AppLayout = () => {
   return (
@@ -11,15 +11,7 @@ const AppLayout = () => {
         <Outlet />
       </div>
       <Footer />
-      <ScrollToTop
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-        smooth
-        color="#174A9E"
-      />
+      <ScrollTop />
     </>
   );
 };

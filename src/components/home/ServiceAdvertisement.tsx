@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import SectionHeading from '../ui/SectionHeading';
+import SectionHeading from '../common/SectionHeading';
 import { serviceCards } from '@/data/serveceAdvertisementData';
 
 interface ServiceCardProps {

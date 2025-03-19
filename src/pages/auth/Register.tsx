@@ -2,11 +2,11 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'motion/react';
 
-import SectionHeading from '@/components/ui/SectionHeading';
-import { useAppSelector } from '@/redux/hooks';
+import SectionHeading from '@/components/common/SectionHeading';
+
 import { toast } from 'sonner';
 import { useUserRegisterMutation } from '@/redux/features/user/userApi';
 
@@ -31,7 +31,7 @@ const Register: React.FC = () => {
 
   const [userRegister] = useUserRegisterMutation();
   const navigate = useNavigate();
-  const user = useAppSelector((state) => state.auth.user);
+  // const user = useAppSelector((state) => state.auth.user);
 
   const onSubmit = async (data: TRegisterFormData) => {
     const toastId = toast.loading('loading...');
@@ -46,9 +46,9 @@ const Register: React.FC = () => {
     }
   };
 
-  if (user) {
-    return <Navigate to={`/dashboard/${user.role}`} replace={true} />;
-  }
+  // if (user) {
+  //   return <Navigate to={`/dashboard/${user.role}`} replace={true} />;
+  // }
 
   return (
     <div className="flex justify-center min-h-screen py-12 bg-gray-50 sm:px-6 lg:px-8">

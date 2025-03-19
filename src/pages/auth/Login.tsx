@@ -2,12 +2,12 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'motion/react';
 import { toast } from 'sonner';
 
-import SectionHeading from '@/components/ui/SectionHeading';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import SectionHeading from '@/components/common/SectionHeading';
+import { useAppDispatch } from '@/redux/hooks';
 import { useLoginMutation } from '@/redux/features/auth/authApi';
 import { setUser } from '@/redux/features/auth/authSlice';
 
@@ -28,7 +28,7 @@ const Login: React.FC = () => {
     resolver: zodResolver(schema),
   });
 
-  const user = useAppSelector((state) => state.auth.user);
+  // const user = useAppSelector((state) => state.auth.user);
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -48,7 +48,7 @@ const Login: React.FC = () => {
         setUser({ user: res.data?.user, token: res.data?.accessToken })
       );
       toast.success('login success!', { id: toastId, duration: 2000 });
-      navigate(`/dashboard/${role}`);
+      navigate(`/${role}/dashboard`);
     } catch (error) {
       console.log(error);
       toast.error('Something went wrong', { id: toastId, duration: 2000 });
@@ -65,9 +65,9 @@ const Login: React.FC = () => {
     }
   };
 
-  if (user) {
-    return <Navigate to={`/dashboard/${user.role}`} replace={true} />;
-  }
+  // if (user) {
+  //   return <Navigate to={`/dashboard/${user.role}`} replace={true} />;
+  // }
 
   return (
     <div className="flex justify-center min-h-screen py-12 bg-gray-50 sm:px-6 lg:px-8">
@@ -80,16 +80,16 @@ const Login: React.FC = () => {
         <div className="flex justify-center mb-6">
           <SectionHeading heading="Login" />
         </div>
-        <div className="flex flex-wrap justify-center gap-2 mb-2">
+        <div className="flex flex-wrap justify-between gap-2 mb-2">
           <button
             onClick={() => handleCredentials('admin')}
-            className="px-2 py-1 text-gray-200 transition duration-300 bg-green-600 rounded-md"
+            className="px-2 py-1 text-gray-200 transition duration-300 bg-blue-600 rounded-md"
           >
             admin credentials
           </button>
           <button
             onClick={() => handleCredentials('user')}
-            className="px-2 py-1 text-gray-200 transition duration-300 bg-green-600 rounded-md"
+            className="px-2 py-1 text-gray-200 transition duration-300 bg-blue-600 rounded-md"
           >
             user credentials
           </button>

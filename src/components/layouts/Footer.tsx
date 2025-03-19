@@ -1,4 +1,4 @@
-import BrandLogo from '../ui/BrandLogo';
+import BrandLogo from '../common/BrandLogo';
 
 import FacebookIcon from '@/assets/icons/FacebookIcon';
 import InstagramIcon from '@/assets/icons/InstagramIcon';
@@ -9,7 +9,6 @@ import { Link } from 'react-router-dom';
 const date = new Date().toDateString().slice(4);
 
 const Footer = () => {
-  const role = 'user';
   return (
     <footer className="text-gray-700 bg-orange-50 md:px-10 px-1">
       <div className="flex flex-col flex-wrap gap-10 p-1 py-24 mx-auto border-b-2 md:items-center lg:items-start md:flex-row md:flex-nowrap">
@@ -44,18 +43,10 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  to="/meeting-rooms"
+                  to="/rooms"
                   className="text-gray-700 hover:text-gray-800 hover:underline hover:scale-105 transition-transform duration-150"
                 >
                   M Rooms
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to={`/dashboard/${role}`}
-                  className="text-gray-700 hover:text-gray-800 hover:underline hover:scale-105 transition-transform duration-150"
-                >
-                  Dashboard
                 </Link>
               </li>
             </nav>

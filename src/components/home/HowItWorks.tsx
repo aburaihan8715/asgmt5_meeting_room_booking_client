@@ -1,5 +1,5 @@
 import { steps } from '@/data/howItWorksData';
-import SectionHeading from '../ui/SectionHeading';
+import SectionHeading from '../common/SectionHeading';
 
 interface StepProps {
   count: string;
@@ -10,7 +10,7 @@ interface StepProps {
 
 const Step = ({ count, heading, description, icon }: StepProps) => {
   return (
-    <div className="relative flex pt-10 pb-20 mx-auto sm:items-center md:w-2/3">
+    <div className="relative flex py-6 mx-auto sm:items-center md:w-2/3">
       <div className="absolute inset-0 flex items-center justify-center w-6 h-full">
         <div className="w-1 h-full bg-gray-200 pointer-events-none"></div>
       </div>
